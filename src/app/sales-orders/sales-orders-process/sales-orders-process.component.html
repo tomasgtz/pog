@@ -1,0 +1,64 @@
+<ng-template [ngIf]="(order)">
+<div class="container container-fluid">
+  <div class="row scrollable">
+    <div class="row">
+      <div class="col-md-12" >
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Customer</th>
+              <th scope="col">Promise date</th>
+              <th scope="col">Subject</th>
+              <th scope="col">Agent</th>
+              <th scope="col">Mod. date</th>
+              <th scope="col">Cred</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ order.account_name }}</td>
+              <td>{{ order.fecha_promesa_entrega_c }}</td>
+              <td>{{ order.name }}</td>
+              <td>{{ order.assigned_user_name }}</td>
+              <td>{{ order.date_modified }}</td>
+              <td>{{ order.credit }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12" >
+        <table class="table table-striped" [dndList]
+        [dndPlaceholder]="placeholder"
+        [dndModel]="order.lineItems">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Item</th>
+              <th scope="col">Description</th>
+              <th scope="col">Comments</th>
+              <th scope="col">Cost</th>
+            </tr>
+          </thead>
+          <tbody >
+            <tr *ngFor="let item of order.lineItems" [dndType]="'lineItem'"
+            [dndDraggable]
+            (dndMoved)="removeItem(item, order.lineItems)"
+            [dndObject]="item">
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.model }}</td>
+              <td>{{ item.description }}</td>
+              <td>{{ item.comments }}</td>
+              <td>{{ item.cost }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</ng-template>
+
+<div class="dndPlaceholder col-md-12"
+  #placeholder></div>

@@ -1,0 +1,19 @@
+.form-group {
+    margin: 5px;
+}
+
+label {
+    font-size: 10px;
+    font-weight: bolder; 
+}
+
+td, th {
+
+    font-size: 0.6em;
+}
+
+input, textarea {
+    
+    width: 100%;
+    padding: 1px;
+}

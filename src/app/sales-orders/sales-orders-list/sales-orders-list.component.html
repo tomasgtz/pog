@@ -1,0 +1,73 @@
+
+<div class="container container-fluid">
+  <div class="row scrollable">
+    <div class="col-md-12" >
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Folio</th>
+            <th scope="col">LLC</th>
+            <th scope="col">Xp</th>
+            <th scope="col">SO#</th>
+            <th scope="col">Subject</th>
+            <th scope="col">Provider</th>
+            <th scope="col">Customer</th>
+            <th scope="col">Promise date</th>
+            <th scope="col">Sales Agent</th>
+            <th scope="col">Modified</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of (filters.chkCTRL ? (orders | SOControl): (null))" (click)="selectOrder(order)">
+              <td>{{ order.folio_c }}</td>
+              <td>{{ order.sdi_llc_c }}</td>
+              <td>{{ order.flete_express_c }}</td>
+              <td>{{ order.purchase_order_num_c }}</td>
+              <td>{{ order.name }}</td>
+              <td>{{ order.proveedor_c }}</td>
+              <td>{{ order.account_name }}</td>
+              <td>{{ order.fecha_promesa_entrega_c }}</td>
+              <td>{{ order.assigned_user_name }}</td>
+              <td>{{ order.date_modified }}</td>
+          </tr>
+          <tr *ngFor="let order of (filters.chkCMH ? (orders | SOCMH): (null))" (click)="selectOrder(order)">
+              <td>{{ order.folio_c }}</td>
+              <td>{{ order.sdi_llc_c }}</td>
+              <td>{{ order.flete_express_c }}</td>
+              <td>{{ order.purchase_order_num_c }}</td>
+              <td>{{ order.name }}</td>
+              <td>{{ order.proveedor_c }}</td>
+              <td>{{ order.account_name }}</td>
+              <td>{{ order.fecha_promesa_entrega_c }}</td>
+              <td>{{ order.assigned_user_name }}</td>
+              <td>{{ order.date_modified }}</td>
+          </tr>
+          <tr *ngFor="let order of (filters.chkSS ? (orders | SOSS): (null))" (click)="selectOrder(order)">
+              <td>{{ order.folio_c }}</td>
+              <td>{{ order.sdi_llc_c }}</td>
+              <td>{{ order.flete_express_c }}</td>
+              <td>{{ order.purchase_order_num_c }}</td>
+              <td>{{ order.name }}</td>
+              <td>{{ order.proveedor_c }}</td>
+              <td>{{ order.account_name }}</td>
+              <td>{{ order.fecha_promesa_entrega_c }}</td>
+              <td>{{ order.assigned_user_name }}</td>
+              <td>{{ order.date_modified }}</td>
+          </tr>
+          <tr *ngFor="let order of (filters.chkEOL ? (orders | SOEOL): (null))" (click)="selectOrder(order)">
+              <td>{{ order.folio_c }}</td>
+              <td>{{ order.sdi_llc_c }}</td>
+              <td>{{ order.flete_express_c }}</td>
+              <td>{{ order.purchase_order_num_c }}</td>
+              <td>{{ order.name }}</td>
+              <td>{{ order.proveedor_c }}</td>
+              <td>{{ order.account_name }}</td>
+              <td>{{ order.fecha_promesa_entrega_c }}</td>
+              <td>{{ order.assigned_user_name }}</td>
+              <td>{{ order.date_modified }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

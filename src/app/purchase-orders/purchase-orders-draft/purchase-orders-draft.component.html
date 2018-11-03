@@ -1,0 +1,21 @@
+<div class="container container-fluid">
+    <div class="row scrollable">
+      <div class="col-md-12" >
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">P.O.</th>
+              <th scope="col">Provider</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let draft of drafts" (click)="selectDraft(draft)">
+                <td>{{ draft.folio_c }}</td>
+                <td>{{ draft.provider }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<i class="fa fa-plus-circle fa-4x" aria-hidden="true"></i>

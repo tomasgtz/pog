@@ -1,0 +1,142 @@
+<button type="button" class="btn btn-outline-secondary btn-sm" (click)="isCollapsed = !isCollapsed" 
+[attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">S/H header</button> <span>
+<div class="row scrollable" [ngbCollapse]="isCollapsed">
+    <div class="col-xs-12">
+       <form [formGroup]="poForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-xs-1">
+            <div class="form-group">
+              <label for="date_created">Date Created</label>
+              <input
+                type="date"
+                id="date_created"
+                formControlName="date_created"
+                class="form-control form-control-sm">
+            </div>
+          </div>
+          <div class="col-xs-2">
+            <div class="form-group">
+              <label for="provider">Provider</label>
+              <input
+                type="text"
+                id="provider"
+                formControlName="provider"
+                class="form-control form-control-sm">
+            </div>
+          </div>
+          <div class="col-xs-1">
+            <div class="form-group">
+              <label for="currency">Currency</label>
+              <input
+                type="text"
+                id="currency"
+                formControlName="currency"
+                class="form-control form-control-sm">
+            </div>
+          </div>
+          <div class="col-xs-2">
+            <div class="form-group">
+              <label for="buyer">Buyer</label>
+              <input
+                type="text"
+                id="buyer"
+                formControlName="buyer"
+                class="form-control form-control-sm">
+            </div>
+          </div>
+          <div class="col-xs-1">
+            <div class="form-group">
+              <label for="project">Project</label>
+              <input
+                type="text"
+                id="project"
+                formControlName="project"
+                class="form-control form-control-sm">
+            </div>
+          </div>
+        </div>
+      
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label for="comments">Comments</label>
+              <textarea
+                type="text"
+                id="comments"
+                class="form-control form-control-sm"
+                formControlName="comments"
+                rows="6" cols="60"></textarea>
+            </div>
+          </div>
+          <div class="col-xs-6">
+              <div class="form-group">
+                <label for="sos_included">CRMs included</label>
+                <textarea
+                  type="text"
+                  id="sos_included"
+                  class="form-control form-control-sm"
+                  formControlName="sos_included"
+                  rows="6" cols="20"></textarea>
+              </div>
+            </div>
+        </div>
+        <div class="row">
+         
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+              <button
+                type="submit"
+                class="btn btn-success"
+                >Save</button> <!-- [disabled]="!recipeForm.valid" -->
+              <button type="button" class="btn btn-danger" >Cancel</button>
+            </div>
+          </div>
+       </form>
+    </div>
+  </div>
+<div class="row">
+    <div class="col-md-12" >
+      <table class="table table-striped" [dndList]
+      [dndPlaceholder]="placeholder"
+      [dndModel]="po.lineItems">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Item</th>
+            <th scope="col">Description</th>
+            <th scope="col">Comments</th>
+            <th scope="col">Cost</th>
+            <th scope="col">OC</th>
+          </tr>
+        </thead>
+        <tbody >
+          <tr *ngFor="let item of po.lineItems; let i = index" [dndType]="'lineItem'"
+          [dndDraggable]
+          (dndMoved)="removeItem(item, po.lineItems)"
+          [dndObject]="item">
+            <td style="width: 60px;">
+                <input
+                    type="text"
+                    id="quantity{{i}}"
+                    class="form-control" value="{{ item.quantity }}">
+            </td>
+            <td>{{ item.model }}</td>
+            <td style="width: 250px;">{{ item.description }}</td>
+            <td>
+                <textarea
+                  type="text"
+                  id="comments{{i}}"
+                  class="form-control form-control-sm"
+                  
+                  rows="2" cols="30">{{ item.comments }}</textarea>
+              </td>
+            <td>{{ item.cost }}</td>
+            <td>{{ item.oc }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="dndPlaceholder col-md-12"
+  #placeholder></div>
