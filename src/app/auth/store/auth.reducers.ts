@@ -1,16 +1,27 @@
 import * as AuthActions from './auth.actions';
+import { createFeatureSelector, createSelector } from '../../../../node_modules/@ngrx/store';
 
-export interface State {
+export interface AuthState {
   token: string;
   authenticated: boolean;
+  name: string;
+  image: string;
 }
 
-const initialState: State = {
-  token: null,
-  authenticated: false
+const initialState: AuthState = {
+  token: '',
+  authenticated: false,
+  name: '',
+  image: ''
 };
 
-export function authReducer(state = initialState, action: AuthActions.AuthActions) {
+export const getUserState = createFeatureSelector<AuthState>('user');
+export const getCards = createSelector(
+    getUserState,
+    state => {state.name,state.authenticated,state.image,state.token}
+); 
+
+export function authReducer(state = initialState, action: AuthActions.AuthActions): AuthState {
   switch (action.type) {
     case (AuthActions.SIGNUP):
     case (AuthActions.SIGNIN):
@@ -26,8 +37,13 @@ export function authReducer(state = initialState, action: AuthActions.AuthAction
       };
     case (AuthActions.SET_TOKEN):
       return {
+        ...state
+      };
+    case (AuthActions.SET_USER_DATA):
+      return {
         ...state,
-        token: action.payload
+        name: action.payload.name,
+        image: action.payload.image
       };
     default:
       return state;

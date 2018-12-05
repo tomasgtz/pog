@@ -1,3 +1,10 @@
+<div *ngIf="error" #alert class="alert alert-danger alert-dismissible fade show" role="alert">
+  <button type="button" class="close" aria-label="Close" (click)="closeAlert()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <strong>Error</strong> {{error}}
+</div>
+
 <div class="container container-fluid">
     <div class="row scrollable">
       <div class="col-md-12" >
@@ -10,8 +17,8 @@
           </thead>
           <tbody>
             <tr *ngFor="let draft of drafts" (click)="selectDraft(draft)">
-                <td>{{ draft.folio_c }}</td>
-                <td>{{ draft.provider }}</td>
+                <td>{{ draft.id }}</td>
+                <td>{{ draft.provider_name  }}</td>
             </tr>
           </tbody>
         </table>

@@ -13,6 +13,7 @@ import {
     GoogleLoginProvider
 } from "angular5-social-login";
 import { SharedModule } from '../shared/shared.module';
+import { AuthGuard } from './auth-guard.service';
 
 export function getAuthServiceConfigs() {
   let config = new AuthServiceConfig(
@@ -38,9 +39,10 @@ export function getAuthServiceConfigs() {
     SigninComponent,
     UsersComponent
   ],
-  providers: [ 
+  providers: [
+    AuthGuard, 
   {
-	provide: AuthServiceConfig,
+	  provide: AuthServiceConfig,
     useFactory: getAuthServiceConfigs
   }
   ]

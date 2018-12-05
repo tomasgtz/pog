@@ -44,40 +44,40 @@ export class AuthEffects {
     .pipe(map((action: AuthActions.TrySignin) => {
         return action.payload;
       })
-      , switchMap((authData: { username: string, token: string }) => {
+      , switchMap((authData: { username: string, token: string, name: string, image: string }) => {
         
       let json = JSON.stringify( authData );
       let params = "json=" + json;
       let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
        
-      //return this.http.post('http://192.168.1.122:82/compras/pog/index.php/Authentication', params, {headers: headers})
-      return this.http.get('http://localhost/pog/indexp.php')
+      return this.http.post('http://192.168.1.122:82/compras/pog/index.php/Authentication', params, {headers: headers})
+      //return this.http.get('http://localhost/pog/index.php')
          .pipe(map((response: Response) => {
-         // console.log("response");
-         // console.log(response + " " + authData.token);
-              
+                   
           return {
                 authorization: response + "", 
-                token: authData.token
+                token: authData.token,
+                name: authData.name,
+                image: authData.image
               };
           
       }));
     })
       
-      , map((responseFromContpaq: { authorization: string, token: string }) => {
+      , map((responseFromContpaq: { authorization: string, token: string, name:string, image:string }) => {
        
           if (responseFromContpaq.authorization == '1' && responseFromContpaq.token != '') {
            
-            return responseFromContpaq.token;
+            return responseFromContpaq;
           }
+
+          responseFromContpaq.authorization = 'no token';
           
-          return 'no token';
+          return responseFromContpaq;
       })
-      , mergeMap((token: string) => {
+      , mergeMap((responseFromContpaq: {authorization: string, token: string, name: string, image: string}) => {
 
-        console.log(token);
-
-        if(token !== 'no token') {
+        if(responseFromContpaq.token !== 'no token') {
           this.router.navigate(['/']);
           return [
             {
@@ -85,7 +85,11 @@ export class AuthEffects {
             },
             {
               type: AuthActions.SET_TOKEN,
-              payload: token
+              payload: responseFromContpaq.token
+            },
+            {
+              type: AuthActions.SET_USER_DATA,
+              payload: {name: responseFromContpaq.name, image: responseFromContpaq.image}
             }
           ];
         } else {

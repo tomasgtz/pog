@@ -25,13 +25,16 @@ export class SigninComponent implements OnInit {
 	
 	this.socialAuthService.signIn(socialPlatformProvider).then(
       (userData) => {
-        //console.log("Sign in data : " , userData);
+        console.log("Sign in data : " , userData);
         
-        const email = userData.email;
-		const idToken = userData.idToken;
-		const token = userData.token;
+    const idToken = userData.idToken;
+		
 	
-		this.store.dispatch(new AuthActions.TrySignin({username: email, token: token}));
+		this.store.dispatch(new AuthActions.TrySignin({
+      username: userData.email, 
+      token: userData.token, 
+      name: userData.name, 
+      image: userData.image}));
             
       }
     );

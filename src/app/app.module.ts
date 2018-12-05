@@ -24,7 +24,7 @@ import { AuthEffects } from './auth/store/auth.effects';
 import { POEffects } from './purchase-orders/store/po.effects';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { SOEffects } from './sales-orders/store/so.effects';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -36,6 +36,7 @@ import { SOEffects } from './sales-orders/store/so.effects';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
 	  AppRoutingModule,
 	  HttpModule,
     AuthModule,
@@ -47,6 +48,9 @@ import { SOEffects } from './sales-orders/store/so.effects';
     AngularFontAwesomeModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [
+    BrowserAnimationsModule
+  ]
 })
 export class AppModule { }

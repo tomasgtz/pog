@@ -13,6 +13,7 @@ import { SalesOrdersService } from './sales-orders.service';
 import { SOControlPipe, SOCMHPipe, SOEOLPipe, SOSSPipe } from '../shared/un.pipe';
 import { PurchaseOrdersModule } from '../purchase-orders/purchase-orders.module';
 import { DndListModule } from 'ngx-drag-and-drop-lists';
+import { AuthGuard } from '../auth/auth-guard.service';
 
 @NgModule({
   imports: [
@@ -34,7 +35,7 @@ import { DndListModule } from 'ngx-drag-and-drop-lists';
     SOEOLPipe,
     SOSSPipe
   ],
-  providers: [SalesOrdersService]
+  providers: [SalesOrdersService, AuthGuard]
 })
 
 export class SalesOrdersModule { }

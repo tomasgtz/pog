@@ -21,15 +21,16 @@ export class SalesOrdersFilterComponent implements OnInit {
   ngOnInit() {
 
     this.filterForm = new FormGroup({
-      'chkCMH': new FormControl(null),
-      'chkCTRL': new FormControl(null),
-      'chkEOL': new FormControl(null),
-      'chkSS': new FormControl(null),
+      'chkCMH': new FormControl(false),
+      'chkCTRL': new FormControl(false),
+      'chkEOL': new FormControl(false),
+      'chkSS': new FormControl(false),
     });
 
     this.filterForm.valueChanges.subscribe(
       (value) => {
         this.checks = value;
+        console.log(this.checks);
         this.updateChecks();
       }
     );

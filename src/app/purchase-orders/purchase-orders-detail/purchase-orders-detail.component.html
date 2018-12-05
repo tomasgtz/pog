@@ -1,38 +1,71 @@
+<div *ngIf="error" #alert class="alert alert-danger alert-dismissible fade show" role="alert">
+  <button type="button" class="close" aria-label="Close" (click)="closeAlert()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <strong><mat-icon svgIcon="thumbs-down"></mat-icon></strong> {{error}}
+</div>
+
+<div *ngIf="success" #alert class="alert alert-success alert-dismissible fade show" role="alert">
+  <button type="button" class="close" aria-label="Close" (click)="closeAlert()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <strong><mat-icon svgIcon="thumbs-up"></mat-icon></strong> {{success}}
+</div>
+
 <button type="button" class="btn btn-outline-secondary btn-sm" (click)="isCollapsed = !isCollapsed" 
 [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">S/H header</button> <span>
-<div class="row scrollable" [ngbCollapse]="isCollapsed">
+<form [formGroup]="poForm">
+
+  <div class="row scrollable" [ngbCollapse]="isCollapsed">
     <div class="col-xs-12">
-       <form [formGroup]="poForm" (ngSubmit)="onSubmit()">
         <div class="row">
           <div class="col-xs-1">
             <div class="form-group">
-              <label for="date_created">Date Created</label>
-              <input
-                type="date"
-                id="date_created"
-                formControlName="date_created"
-                class="form-control form-control-sm">
+                <mat-form-field>
+                    <input matInput formControlName="id" placeholder="ID">
+                  </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xs-1">
+            <div class="form-group">
+                <mat-form-field>
+                    <input placeholder="Choose a date" matInput formControlName="date_created" [matDatepicker]="picker" >
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
             </div>
           </div>
           <div class="col-xs-2">
             <div class="form-group">
-              <label for="provider">Provider</label>
-              <input
-                type="text"
-                id="provider"
-                formControlName="provider"
-                class="form-control form-control-sm">
+              <mat-form-field class="example-full-width">
+                <input type="text" placeholder="Provider"  matInput [formControl]="providerCtrl" formControlName="provider" ngDefaultControl  [matAutocomplete]="auto">
+                  <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let provider of providersO | async" 
+                      [value]="provider.contpaqId" 
+                      #tooltip="matTooltip"  
+                      matTooltipPosition="right" 
+                      matTooltip="{{provider.name}}" >
+                        {{provider.name}}
+                    </mat-option>
+                  </mat-autocomplete>
+              </mat-form-field>
             </div>
           </div>
           <div class="col-xs-1">
             <div class="form-group">
-              <label for="currency">Currency</label>
-              <input
-                type="text"
-                id="currency"
-                formControlName="currency"
-                class="form-control form-control-sm">
-            </div>
+                <mat-form-field class="example-full-width">
+                  <input type="text" placeholder="Currency" formControlName="currencyId" ngDefaultControl matInput  [matAutocomplete]="curr">
+                    <mat-autocomplete #curr="matAutocomplete">
+                      <mat-option *ngFor="let currency of currencies" 
+                        [value]="currency.id" 
+                        #tooltip="matTooltip"  
+                        matTooltipPosition="right" 
+                        matTooltip="{{ currency.name}}">
+                        {{currency.name}}
+                      </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+              </div>
           </div>
           <div class="col-xs-2">
             <div class="form-group">
@@ -41,6 +74,7 @@
                 type="text"
                 id="buyer"
                 formControlName="buyer"
+                readonly
                 class="form-control form-control-sm">
             </div>
           </div>
@@ -86,20 +120,21 @@
         <div class="row">
             <div class="col-xs-12">
               <button
-                type="submit"
+                type="button"
                 class="btn btn-success"
-                >Save</button> <!-- [disabled]="!recipeForm.valid" -->
+                (click) = "saveThisPO()"
+                >Save</button> 
               <button type="button" class="btn btn-danger" >Cancel</button>
             </div>
           </div>
-       </form>
     </div>
   </div>
 <div class="row">
-    <div class="col-md-12" >
+    <div class="col-md-12" >{{ poForm.controls.poLineItems}}
       <table class="table table-striped" [dndList]
       [dndPlaceholder]="placeholder"
-      [dndModel]="po.lineItems">
+      [dndModel]="po.lineItems"
+      formArrayName="poLineItems">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -111,32 +146,37 @@
           </tr>
         </thead>
         <tbody >
-          <tr *ngFor="let item of po.lineItems; let i = index" [dndType]="'lineItem'"
+          <tr *ngFor="let item of poForm.controls.poLineItems.controls; let i = index" [dndType]="'lineItem'"
           [dndDraggable]
-          (dndMoved)="removeItem(item, po.lineItems)"
-          [dndObject]="item">
+          (dndInserted)="addItem(item)"
+          (dndMoved)="removeItem(item)"
+          [dndObject]="item"
+          [formGroupName]="i">
             <td style="width: 60px;">
                 <input
                     type="text"
                     id="quantity{{i}}"
-                    class="form-control" value="{{ item.quantity }}">
+                    class="form-control"
+                    formControlName="quantity">
             </td>
-            <td>{{ item.model }}</td>
-            <td style="width: 250px;">{{ item.description }}</td>
+            <td >{{ lineItems[i].model }}</td>
+            <td style="width: 250px;">{{ lineItems[i].description }}</td>
             <td>
                 <textarea
                   type="text"
                   id="comments{{i}}"
                   class="form-control form-control-sm"
-                  
-                  rows="2" cols="30">{{ item.comments }}</textarea>
+                  formControlName="comments"
+                  rows="2" cols="30"></textarea>
               </td>
-            <td>{{ item.cost }}</td>
-            <td>{{ item.oc }}</td>
+            <td>{{ lineItems[i].cost }}</td>
+            <td>{{ lineItems[i].oc }}</td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
+
+</form>
   <div class="dndPlaceholder col-md-12"
   #placeholder></div>

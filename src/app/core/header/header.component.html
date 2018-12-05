@@ -11,6 +11,10 @@
             </ng-template>
           </ul>
           <ul class="nav navbar-nav navbar-right">
+            <ng-template [ngIf]="(authState | async).authenticated">
+                <li><img class="user" src="{{(authState | async).image}}"></li>
+            </ng-template>
+            
             <li><a style="cursor: pointer;" (click)="onLogout()" *ngIf="(authState | async).authenticated">Log out </a></li>
       
             <li routerLinkActive="active"><a routerLink="/sales-orders" *ngIf="(authState | async).authenticated"> Process Orders</a></li>

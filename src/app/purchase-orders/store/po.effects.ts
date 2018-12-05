@@ -1,14 +1,15 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Router} from '@angular/router';
-import {map, tap, switchMap, mergeMap} from 'rxjs/operators';
-import { from, Observable, pipe } from 'rxjs';
+import {map, tap, switchMap, mergeMap, catchError} from 'rxjs/operators';
+import { from, Observable, pipe, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import * as POActions from './po.actions';
 import { Provider } from '../../shared/provider.model';
 import * as fromApp from '../../store/app.reducers';
 import { Store } from '@ngrx/store';
+import { PO } from '../../shared/po.model';
 
 @Injectable()
 export class POEffects {
@@ -19,8 +20,8 @@ export class POEffects {
     .ofType(POActions.GET_PROVIDERS)
     .pipe(switchMap((action: POActions.GetProviders) => {
       
-        //return this.http.get('http://192.168.1.122:82/compras/pog/index.php/providers').pipe(map((response: Response) => {
-         return this.http.get<Provider[]>('http://localhost/pog/providers.php', {
+        return this.http.get<Provider[]>('http://192.168.1.122:82/compras/pog/index.php/providers', {
+         //return this.http.get<Provider[]>('http://localhost/pog/providers.php', {
            observe: 'body',
            responseType: 'json'
          });
@@ -34,8 +35,57 @@ export class POEffects {
         }
       ));
           
+  @Effect()
+  savePO = this.actions$
+  .ofType(POActions.SAVE_ORDER)
+  .pipe(switchMap((action: POActions.SavePurchaseOrder) => {
+    
+    let headers = new HttpHeaders();
+    headers.append('Content-Type', 'application/json');
+    headers.append('cache-control', 'no-cache');
   
+    console.log(action.payload);
+    return this.http.put(
+      'http://192.168.1.122:82/compras/pog/index.php/savePO', 
+      JSON.stringify(action.payload), 
+      {headers: headers})  
+                   
+  }), map((response: string) => {
+    // reload the list of drafts
+    this.store.dispatch(new POActions.GetPODrafts());
 
-  constructor(private actions$: Actions, private router: Router, private http: HttpClient, private store: Store<fromApp.AppState>) {
+    return {
+      type: POActions.PO_SAVED_SUCCESSFULLY,
+      payload: JSON.parse(response)
+    };
+  }), catchError(error => this.handleError(error)));
+
+
+
+  @Effect()
+  poGetPODrafts = this.actions$
+    .ofType(POActions.GET_PO_DRAFTS)
+    .pipe(switchMap((action: POActions.GetPODrafts) => {
+      
+        return this.http.get<PO[]>('http://192.168.1.122:82/compras/pog/index.php/po_drafts', {
+         //return this.http.get<Provider[]>('http://localhost/pog/providers.php', {
+           observe: 'body',
+           responseType: 'json'
+         });
+        }), map((drafts) => {
+
+          return {
+            type: POActions.SET_PO_DRAFTS,
+            payload: drafts
+          };
+          
+        }
+      ), catchError(error => this.handleError(error)));
+
+  constructor(private actions$: Actions, private router: Router, private http: HttpClient, private store: Store<fromApp.AppState>) {}
+  
+  private handleError(error) {
+    console.log(error.error.text);
+    return of(new POActions.ErrorAction(error.error.text));
   }
 }

@@ -7,7 +7,7 @@ import * as fromPO from '../purchase-orders/store/po.reducers';
 
 export interface AppState {
  // shoppingList: fromShoppingList.State,
-  auth: fromAuth.State,
+  auth: fromAuth.AuthState,
   so: fromSO.State,
   po: fromPO.State
 }
