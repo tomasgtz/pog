@@ -12,7 +12,10 @@
   <strong><mat-icon svgIcon="thumbs-up"></mat-icon></strong> {{success}}
 </div>
 
-<button type="button" class="btn btn-outline-secondary btn-sm" (click)="isCollapsed = !isCollapsed" 
+
+
+
+<button type="button" class="btn btn-outline-secondary btn-sm" (click)="isCollapsed = !isCollapsed"
 [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">S/H header</button> <span>
 <form [formGroup]="poForm">
 
@@ -40,10 +43,10 @@
               <mat-form-field class="example-full-width">
                 <input type="text" placeholder="Provider"  matInput [formControl]="providerCtrl" formControlName="provider" ngDefaultControl  [matAutocomplete]="auto">
                   <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let provider of providersO | async" 
-                      [value]="provider.contpaqId" 
-                      #tooltip="matTooltip"  
-                      matTooltipPosition="right" 
+                    <mat-option *ngFor="let provider of providersO | async"
+                      [value]="provider.contpaqId"
+                      #tooltip="matTooltip"
+                      matTooltipPosition="right"
                       matTooltip="{{provider.name}}" >
                         {{provider.name}}
                     </mat-option>
@@ -56,10 +59,10 @@
                 <mat-form-field class="example-full-width">
                   <input type="text" placeholder="Currency" formControlName="currencyId" ngDefaultControl matInput  [matAutocomplete]="curr">
                     <mat-autocomplete #curr="matAutocomplete">
-                      <mat-option *ngFor="let currency of currencies" 
-                        [value]="currency.id" 
-                        #tooltip="matTooltip"  
-                        matTooltipPosition="right" 
+                      <mat-option *ngFor="let currency of currencies"
+                        [value]="currency.id"
+                        #tooltip="matTooltip"
+                        matTooltipPosition="right"
                         matTooltip="{{ currency.name}}">
                         {{currency.name}}
                       </mat-option>
@@ -89,7 +92,7 @@
             </div>
           </div>
         </div>
-      
+
         <div class="row">
           <div class="col-xs-6">
             <div class="form-group">
@@ -115,7 +118,7 @@
             </div>
         </div>
         <div class="row">
-         
+
         </div>
         <div class="row">
             <div class="col-xs-12">
@@ -123,18 +126,21 @@
                 type="button"
                 class="btn btn-success"
                 (click) = "saveThisPO()"
-                >Save</button> 
+                >Save</button>
               <button type="button" class="btn btn-danger" >Cancel</button>
+              <button type="button" class="btn btn-warning" (click)="checkInventory()" *ngIf="(inventory != null)">Check inventory</button>
             </div>
           </div>
     </div>
   </div>
 <div class="row">
-    <div class="col-md-12" >{{ poForm.controls.poLineItems}}
+    <div class="col-md-12" ><!--  -->
       <table class="table table-striped" [dndList]
-      [dndPlaceholder]="placeholder"
+      [dndPlaceholder]="placeholder2"
       [dndModel]="po.lineItems"
-      formArrayName="poLineItems">
+      (dndInserted)="addItem()" 
+      formArrayName="poLineItems"
+      >
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -145,33 +151,38 @@
             <th scope="col">OC</th>
           </tr>
         </thead>
-        <tbody >
-          <tr *ngFor="let item of poForm.controls.poLineItems.controls; let i = index" [dndType]="'lineItem'"
-          [dndDraggable]
-          (dndInserted)="addItem(item)"
-          (dndMoved)="removeItem(item)"
-          [dndObject]="item"
-          [formGroupName]="i">
-            <td style="width: 60px;">
-                <input
-                    type="text"
-                    id="quantity{{i}}"
-                    class="form-control"
-                    formControlName="quantity">
+        <tbody > 
+          <!-- <tr *ngFor="let item of po.lineItems" [dndType]="'lineItem'" [dndDraggable] (dndMoved) = "removeItem(item)" [dndObject]="item" >
+            <td style="width: 60px;" > {{item.quantity}} </td>
+            <td >{{item.model}}</td> 
+            <td style="width: 250px;">{{item.description}}</td>
+            <td> {{item.comments}} </td>
+            <td>{{item.cost}}</td>
+            <td>{{ item.oc }}</td>
+          </tr>-->
+          
+          <tr *ngFor="let item of poForm.controls.poLineItems['controls']; let j = index" [formGroupName]="j">
+            <td style="width: 60px;" >
+               <input
+                  type="text"
+                  id="quantity{{j}}"
+                  class="form-control"
+                  formControlName="quantity">
             </td>
-            <td >{{ lineItems[i].model }}</td>
-            <td style="width: 250px;">{{ lineItems[i].description }}</td>
+            <td ><span *ngIf="lineItems[j]">{{ lineItems[j].model }}</span></td> 
+            <td style="width: 250px;"><span *ngIf="lineItems[j]">{{ lineItems[j].description }}</span></td>
             <td>
                 <textarea
                   type="text"
-                  id="comments{{i}}"
+                  id="comments{{j}}"
                   class="form-control form-control-sm"
                   formControlName="comments"
                   rows="2" cols="30"></textarea>
               </td>
-            <td>{{ lineItems[i].cost }}</td>
-            <td>{{ lineItems[i].oc }}</td>
+            <td><span *ngIf="lineItems[j]">{{ lineItems[j].cost }}</span></td>
+            <td><span *ngIf="lineItems[j]">{{ lineItems[j].oc }}</span></td>
           </tr>
+
         </tbody>
       </table>
     </div>
@@ -179,4 +190,4 @@
 
 </form>
   <div class="dndPlaceholder col-md-12"
-  #placeholder></div>
+  #placeholder2></div>

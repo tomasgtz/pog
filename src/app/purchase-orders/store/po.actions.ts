@@ -10,6 +10,7 @@ export const PO_SAVED_SUCCESSFULLY = 'PO_SAVED_SUCCESSFULLY';
 export const SET_PO_DRAFTS = 'SET_PO_DRAFTS';
 export const GET_PO_DRAFTS = 'GET_PO_DRAFTS';
 export const SET_PO = 'SET_PO';
+export const SET_INVENTORY_DATA = 'SET_INVENTORY_DATA';
 
 export class GetProviders implements Action {
   readonly type = GET_PROVIDERS;
@@ -55,4 +56,10 @@ export class SaveSuccess implements Action {
   constructor(public payload: string) {}
 }
 
-export type POActions = GetProviders | SetProviders | SavePurchaseOrder | ErrorAction | SaveSuccess | SetPODrafts | GetPODrafts | SetPO;
+export class SetInvData implements Action {
+  readonly type = SET_INVENTORY_DATA;
+  
+  constructor(public payload: any) {}
+}
+
+export type POActions = GetProviders | SetProviders | SavePurchaseOrder | ErrorAction | SaveSuccess | SetPODrafts | GetPODrafts | SetPO | SetInvData;

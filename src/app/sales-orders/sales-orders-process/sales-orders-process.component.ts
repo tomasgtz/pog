@@ -35,4 +35,5 @@ export class SalesOrdersProcessComponent implements OnInit {
     list.splice(list.indexOf(item), 1);
   }
 
+
 }

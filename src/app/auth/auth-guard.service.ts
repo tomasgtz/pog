@@ -19,8 +19,6 @@ export class AuthGuard implements CanActivate {
 
         return store.pipe(map((state) => {
 
-            console.log("asd");
-            console.log(state);
             if(state) {
                 return state.authenticated;
             }

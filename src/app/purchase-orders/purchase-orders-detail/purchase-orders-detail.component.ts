@@ -15,6 +15,7 @@ import { map, startWith } from '../../../../node_modules/rxjs/operators';
 
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material';
+import { CheckInventoryService } from '../../shared/check-inventory.service';
 
 @Component({
   selector: 'app-purchase-orders-detail',
@@ -40,13 +41,17 @@ export class PurchaseOrdersDetailComponent implements OnInit {
   poLineItems: FormArray = new FormArray([]);
   //providers2: Provider[];
   username: string = '';
+  inventory: any = null;
+  formulas: any = null;
 
-  constructor(private store: Store<fromApp.AppState>, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) { 
-    iconRegistry.addSvgIcon(
-      'thumbs-up',
+  constructor(private store: Store<fromApp.AppState>, 
+            iconRegistry: MatIconRegistry, 
+            sanitizer: DomSanitizer, 
+            private invService: CheckInventoryService) { 
+    
+    iconRegistry.addSvgIcon( 'thumbs-up',
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/thumb_up_24px.svg'));
-    iconRegistry.addSvgIcon(
-      'thumbs-down',
+    iconRegistry.addSvgIcon( 'thumbs-down',
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/thumb_down_24px.svg'));
   }
 
@@ -56,7 +61,6 @@ export class PurchaseOrdersDetailComponent implements OnInit {
     this.authState.subscribe((authState: fromAuth.AuthState) => {
       this.username = authState.name;
     });
-
   
     this.poForm = new FormGroup({
       'id':           new FormControl(null),
@@ -88,12 +92,19 @@ export class PurchaseOrdersDetailComponent implements OnInit {
       this.lineItems = poState.po.lineItems;
       this.error = poState.error;
       this.success = poState.success;
+      this.inventory = poState.inventory;
+      this.formulas = poState.formulas;
       
       of(this.lineItems).subscribe( (items) => {
+        
+        this.poLineItems = new FormArray([]);
+
         if(null != items) {
+        
           items.forEach((item: LineItem) => {
           
             let row = new FormGroup({
+              'model':    new FormControl(item.model),
               'quantity': new FormControl(item.quantity),
               'comments': new FormControl(item.comments)
             });
@@ -101,9 +112,10 @@ export class PurchaseOrdersDetailComponent implements OnInit {
             this.poLineItems.push(row);  
           });
           
+          this.poForm.removeControl('poLineItems');     
           this.poForm.addControl('poLineItems', this.poLineItems);
       
-          console.log(this.poForm.controls);
+          console.log("aqui entra actualizando controles");
         }
       
       });
@@ -113,7 +125,6 @@ export class PurchaseOrdersDetailComponent implements OnInit {
     return this.store.dispatch(new POActions.GetProviders());
   }
 
- 
 
   private _filter(value: String): Provider[] {
     if(value == null) {
@@ -125,22 +136,38 @@ export class PurchaseOrdersDetailComponent implements OnInit {
     return this.providers.filter(option => option.name.toString().toLowerCase().includes(filterValue));
   }
 
-
-
-
-
   public isArray(object): boolean {
     return Array.isArray(object);
   }
 
   public removeItem(item: LineItem): void {
+    console.log("aqui entra al remover un item");
     this.po.lineItems.splice(this.po.lineItems.indexOf(item), 1);
 
   }
 
-  public addItem(item: LineItem): void {
-    this.po.lineItems.push(item);
+  public addItem(): void {
+    console.log("buscar en el inventario, si lo encuentra, separarlo y removerlo de esta po.lineItems");
+    const item = this.po.lineItems[this.po.lineItems.length-1];
+    
 
+    let row = new FormGroup({
+      'model':    new FormControl(item.model),
+      'quantity': new FormControl(item.quantity),
+      'comments': new FormControl(item.comments)
+    });
+  
+    this.poLineItems.push(row); 
+    this.poForm.addControl('poLineItems', this.poLineItems);
+
+  }
+
+  finishDrag(item: LineItem): void {
+    console.log("termina el drag");
+  }
+
+  itemEnters(item: any) {
+    console.log("elemento entra");
   }
 
   onSubmit() {
@@ -157,16 +184,68 @@ export class PurchaseOrdersDetailComponent implements OnInit {
     this.po.comments = this.poForm.value.comments;
     this.po.project = this.poForm.value.project;
     this.po.creator = this.username;
-    console.log(this.poForm.value.poLineItems);
-    console.log(this.po.lineItems);
+    
+    // get quantity and comments from the form and save into po
+    this.po.lineItems.forEach( (poLineItem, index) => {
+      
+      this.po.lineItems[index].quantity = this.poForm.controls.poLineItems['controls'][index].value.quantity;
+      this.po.lineItems[index].comments = this.poForm.controls.poLineItems['controls'][index].value.comments; 
+    });
+   
+    // check inventory
+    this.invService.checkInventory(this.po.lineItems).subscribe((result) => {
 
-    //this.store.dispatch(new POActions.SavePurchaseOrder(this.po));
+      if(result === "error") {
+
+        if(confirm("Inventario no disponible. ¿Desea continuar?") ) {
+
+          this.saveInDB();
+        }
+
+      } else if(result !== "no items"){
+
+        this.removeReservedItemsFromThisPO(result['items']);
+      }
+
+
+    });
+
+  }
+
+  saveInDB() {
+
+   // this.store.dispatch(new POActions.SavePurchaseOrder(this.po));
+  }
+
+  removeReservedItemsFromThisPO(items) {
+
+    for(let i = 0; i < items.length; i++) {
+      let itemReserved = items[i];
+        
+      let index = this.lineItems.findIndex(poLineItem => (itemReserved.model === poLineItem.model));
+
+      if(index !== -1) {
+        
+        if(this.lineItems[index].quantity === itemReserved.quantity) {
+          
+          this.lineItems.splice(index, 1);
+          this.poLineItems.controls.splice(index, 1);
+         
+        } else {
+          
+          this.lineItems[index].quantity = this.lineItems[index].quantity - itemReserved.quantity;
+          this.poLineItems.controls[index].patchValue({'quantity': this.lineItems[index].quantity}); 
+        } 
+      }
+    }    
   }
 
   closeAlert() {
     this.error = null;
     this.success = null;
   }
+
+  
 }
 
 

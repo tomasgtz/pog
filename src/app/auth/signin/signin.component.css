@@ -53,3 +53,7 @@ body{
         border-top:0 none;
     }
 }
+
+.logo {
+justify-content: center;
+}

@@ -8,6 +8,8 @@ export interface State {
   error: any;
   success: string;
   drafts: PO[];
+  inventory: any;
+  formulas: any;
 }
 
 const initialState: State = {
@@ -15,7 +17,9 @@ const initialState: State = {
   po: new PO('0','','',0,'',[],0,'','','',''),
   error: null,
   success: null,
-  drafts: null
+  drafts: null,
+  inventory: null,
+  formulas: null
 };
 
 export function poReducer(state = initialState, action: POActions.POActions) {
@@ -39,6 +43,14 @@ export function poReducer(state = initialState, action: POActions.POActions) {
         ...state,
         po: action.payload,
         success: "PO loaded successfully"
+      };
+
+    case (POActions.SET_INVENTORY_DATA):
+      return {
+        ...state,
+        inventory: action.payload.data,
+        formulas: action.payload.formulas,
+        success: "Inventory data loaded successfully"
       };
 
     case (POActions.SAVE_ORDER):
