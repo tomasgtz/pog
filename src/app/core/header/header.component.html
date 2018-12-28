@@ -15,9 +15,11 @@
                 <li><img class="user" src="{{(authState | async).image}}"></li>
             </ng-template>
             
-            <li><a style="cursor: pointer;" (click)="onLogout()" *ngIf="(authState | async).authenticated">Log out </a></li>
+            <li><span class="link" *ngIf="(authState | async).authenticated" (click)="onLogout()" >Log out </span></li>
       
             <li routerLinkActive="active"><a routerLink="/sales-orders" *ngIf="(authState | async).authenticated"> Process Orders</a></li>
+
+            <li><span class="link" *ngIf="(authState | async).authenticated" (click)="missingProducts()"> Missing Products </span></li>
               
             <li class="dropdown" appDropdown *ngIf="(authState | async).authenticated">
               <a style="cursor: pointer;" class="dropdown-toggle" role="button">User <span class="caret"></span></a>
@@ -26,7 +28,14 @@
               </ul>
             </li>
 
-
+            <li *ngIf="message">
+              <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="dismiss()">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            </li>
 	         </ul>
         </div>
 </nav>

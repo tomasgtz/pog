@@ -8,16 +8,18 @@ export interface State {
   error: any;
   success: string;
   drafts: PO[];
+  processed: PO[];
   inventory: any;
   formulas: any;
 }
 
 const initialState: State = {
   providers: [],
-  po: new PO('0','','',0,'',[],0,'','','',''),
+  po: new PO('0','','',0,'',[],"0",'','','',''),
   error: null,
   success: null,
   drafts: null,
+  processed: null,
   inventory: null,
   formulas: null
 };
@@ -36,6 +38,13 @@ export function poReducer(state = initialState, action: POActions.POActions) {
       return {
         ...state,
         drafts: [...action.payload]
+      };
+    
+      case (POActions.SET_PO_PROCESSED):
+    
+      return {
+        ...state,
+        processed: [...action.payload]
       };
 
     case (POActions.SET_PO):

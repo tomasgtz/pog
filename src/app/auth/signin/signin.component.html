@@ -1,24 +1,36 @@
 <div class="container container-fluid text-center">
-
-         <div class="row logo">
-         	<img src="/assets/img/icons/POG.JPG">
-         </div>
-<br><br>
-                           <div class="row logo">
-                                  <div class="col-md-4">
-                                      Login via
-                                      <div class="social-buttons btn-fb">
-                                          <a class="btn btn-fb" (click)="socialSignIn()"><i class="fa fa-google"></i> Google</a>
-                                      </div>
-<br><br>
-                                      <div class="bottom text-center">
-                                            New here ? <a href="#"><b>Check tutorial</b></a>
+    <div class="backg">
+        <div class="row centered-form">
+            <div class="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading logo">
+                        <img src="/assets/img/icons/POG.JPG" class="logo2">
+                    </div>
+                    <div class="panel-body">
+                        <div class="row logo">
+                            <div class="col-md-12">
+                                <p>Login via</p>
+                                <div class="row logo">
+                                    <div class="col-md-4">
+                                        <div class="social-buttons">
+                                            <a class="btn btn-primary" style="background-color:#EA4335; color: #fff;" (click)="socialSignIn()"><i class="fa fa-google"></i> Google</a>
                                         </div>
-                                  </div>
-
-
-                           </div>
-
-
-
+                                    </div>
+                                </div>
+                                <br><br>
+                                <div class="bottom text-center">
+                                    <span> New here ? <a href="#"><b>Check tutorial</b></a></span>
+                                </div>
+                                <br><br>
+                                
+                            </div>
+                        </div>
+                        <div style="padding: 10px;">
+                            <input type="button" (click)="signUp()" value="Sign Up" class="btn btn-secondary btn-block" style="color: #fff; margin-bottom: 10px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>

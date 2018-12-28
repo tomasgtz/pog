@@ -16,7 +16,9 @@ export class Order {
         public assigned_user_name: string,
         public date_modified: string,
         public credit: string,
-        public lineItems: LineItem[]
+        public lineItems: LineItem[],
+        public selectedAll: boolean = false,
+        public status: string
     ) {
 
         this.sugarId = sugarId;
@@ -33,6 +35,8 @@ export class Order {
         this.date_modified = date_modified;
         this.credit = credit;
         this.lineItems = lineItems;
+        this.selectedAll = selectedAll;
+        this.status = status;
         
     }
 }

@@ -82,6 +82,35 @@ export class POEffects {
         }
       ), catchError(error => this.handleError(error)));
 
+  
+  @Effect()
+  poGetPOProcessed = this.actions$
+    .ofType(POActions.GET_PO_PROCESSED)
+    .pipe(switchMap((action: POActions.GetPOProcessed) => {
+       console.log("llamando al rest");
+        return this.http.get<PO[]>('http://192.168.1.122:82/compras/pog/index.php/po_processed', {
+          //return this.http.get<Provider[]>('http://localhost/pog/providers.php', {
+            observe: 'body',
+            responseType: 'json'
+          });
+        }), map((processed: any) => {
+          console.log("list rece", processed.error);
+          
+
+            if(processed.error !== undefined) {
+              return {
+                type: POActions.PO_ERROR,
+                payload: processed.error
+              };
+            } else {
+              return {
+                type: POActions.SET_PO_PROCESSED,
+                payload: processed
+              };
+            }
+          
+        }
+      ), catchError(error => this.handleError(error)));
   constructor(private actions$: Actions, private router: Router, private http: HttpClient, private store: Store<fromApp.AppState>) {}
   
   private handleError(error) {

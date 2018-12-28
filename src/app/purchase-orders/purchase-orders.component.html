@@ -1,10 +1,10 @@
 <!-- Nav tabs -->
 <ul class="nav nav-tabs">
     <li class="nav-item" [ngClass]="{'active': showDrafts }">
-      <a class="nav-link"  data-toggle="tab" (click)="show('drafts')" role="button">Drafts</a>
+      <a class="nav-link"  data-toggle="tab" (click)="show('drafts')" ><i class="fa fa-file"></i> Drafts</a>
     </li>
     <li class="nav-item" [ngClass]="{'active': showProcessed }">
-      <a class="nav-link"  data-toggle="tab" (click)="show('processed')" role="button">Processed</a>
+      <a class="nav-link"  data-toggle="tab" (click)="show('processed')" ><i class="fa fa-sign-in"></i> Processed</a>
     </li>
   </ul>
   

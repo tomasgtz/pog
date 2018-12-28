@@ -29,11 +29,14 @@
     </div>
     <div class="row">
       <div class="col-md-12" >
-        <table class="table table-striped" [dndList]
+        <!-- <table class="table table-striped" [dndList]
         [dndPlaceholder]="placeholder"
-        [dndModel]="order.lineItems">
+        [dndModel]="order.lineItems">-->
+        <form (ngSubmit)="onSubmit()" #f="ngForm">
+        <table class="table table-striped" *ngIf="order.lineItems && order.lineItems.length > 0">
           <thead>
             <tr>
+              <th scope="col"><input class="chk" type="checkbox" (click)="selectAllChecks(f)" [(ngModel)]="order.selectedAll" name="chkAll"></th>
               <th scope="col">#</th>
               <th scope="col">Item</th>
               <th scope="col">Description</th>
@@ -42,7 +45,7 @@
             </tr>
           </thead>
           <tbody >
-            <tr *ngFor="let item of order.lineItems" [dndType]="'lineItem'"
+            <!--<tr *ngFor="let item of order.lineItems" [dndType]="'lineItem'"
             [dndDraggable]
             (dndMoved)="removeItem(item, order.lineItems)"
             [dndObject]="item">
@@ -51,9 +54,22 @@
               <td>{{ item.description }}</td>
               <td>{{ item.comments }}</td>
               <td>{{ item.cost }}</td>
+            </tr>-->
+            <tr *ngFor="let item of order.lineItems; let idx = index" >
+              <td><input class="chk" type="checkbox" [(ngModel)]="item.lineSelected" name="selected-{{idx}}" #name="ngModel" (click)="updateList(idx, item)"></td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.model }}</td>
+              <td>{{ item.description }}</td>
+              <td>{{ item.comments }}</td>
+              <td>{{ item.cost }}</td>
             </tr>
           </tbody>
         </table>
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <button *ngIf="order.lineItems && order.lineItems.length > 0" type="submit" class="btn btn-primary"><i class="fa fa-arrow-down"></i> Process</button>
+        </div>
+        
+        </form>
       </div>
     </div>
   </div>

@@ -25,6 +25,8 @@ import { POEffects } from './purchase-orders/store/po.effects';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { SOEffects } from './sales-orders/store/so.effects';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PDFExportModule } from '@progress/kendo-angular-pdf-export';
+
 
 
 @NgModule({
@@ -45,7 +47,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([AuthEffects, POEffects, SOEffects]),
     StoreRouterConnectingModule,
-    AngularFontAwesomeModule
+    AngularFontAwesomeModule,
+    PDFExportModule
   ],
   providers: [],
   bootstrap: [AppComponent],

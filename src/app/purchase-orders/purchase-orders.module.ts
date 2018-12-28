@@ -13,7 +13,7 @@ import { SharedModule } from '../shared/shared.module';
 import { MatFormFieldModule, MatInputModule, MatNativeDateModule } from '../../../node_modules/@angular/material';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatIconModule } from '@angular/material/icon';
+import { PDFExportModule } from '@progress/kendo-angular-pdf-export';
 
 @NgModule({
   imports: [
@@ -29,7 +29,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatTooltipModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatIconModule
+    PDFExportModule
   ],
   declarations: [
     PurchaseOrdersDetailComponent,

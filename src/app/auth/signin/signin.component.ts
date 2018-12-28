@@ -4,6 +4,7 @@ import { AuthService, GoogleLoginProvider } from 'angular5-social-login';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducers';
 import * as AuthActions from '../store/auth.actions';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signin',
@@ -12,7 +13,7 @@ import * as AuthActions from '../store/auth.actions';
 })
 export class SigninComponent implements OnInit {
 
-  constructor( private socialAuthService: AuthService, private store: Store<fromApp.AppState> ) { }
+  constructor( private socialAuthService: AuthService, private store: Store<fromApp.AppState>, private router: Router ) { }
 
   ngOnInit() {
   }
@@ -38,6 +39,10 @@ export class SigninComponent implements OnInit {
             
       }
     );
+  }
+
+  signUp() {
+    this.router.navigateByUrl("/signup");
   }
 
 }

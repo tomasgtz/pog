@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Router} from '@angular/router';
-import {map, tap, switchMap, mergeMap} from 'rxjs/operators';
-import { from, Observable, pipe } from 'rxjs';
+import {map, tap, switchMap, mergeMap, catchError} from 'rxjs/operators';
+import { from, Observable, pipe, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import * as AuthActions from './auth.actions';
@@ -18,25 +18,68 @@ export class AuthEffects {
     .pipe(map((action: AuthActions.TrySignup) => {
         return action.payload;
       })
-      , switchMap((authData: { username: string, password: string }) => {
-      return '';
-     //   return from(firebase.auth().createUserWithEmailAndPassword(authData.username, authData.password));
-      })
-      , switchMap(() => {
-      return '';
-     //   return from(firebase.auth().currentUser.getIdToken());
-      })
-      , mergeMap((token: string) => {
-        return [
-          {
-            type: AuthActions.SIGNUP
-          },
-          {
-            type: AuthActions.SET_TOKEN,
-            payload: token
+      , switchMap((authData: { username: string }) => {
+
+        
+        let json = JSON.stringify( authData );
+        let params = "json=" + json;
+        let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+        //console.log(params);
+        return this.http.post('http://192.168.1.122:82/compras/pog/index.php/SignUp', params, {headers: headers})
+        .pipe(map((response: Response) => {
+              console.log(response);
+          if(response + "" === "ok") {
+            return {
+              type: AuthActions.SIGNUP,
+              payload: "ok"
+            };
           }
-        ]; 
+          
+        }), catchError(error => this.handleError(error)))
       }));
+
+  @Effect()
+  poGetPODrafts = this.actions$
+    .ofType(AuthActions.GET_USERS_DATA)
+    .pipe(switchMap((action: AuthActions.GetUsers) => {
+      
+        return this.http.get('http://192.168.1.122:82/compras/pog/index.php/users', {
+          
+            observe: 'body',
+            responseType: 'json'
+          });
+        }), map((users) => {
+
+          return {
+            type: AuthActions.SET_USERS_DATA,
+            payload: {users: users, mesg: "Users loaded correctly" }
+          };
+          
+        }
+      ), catchError(error => this.handleError(error)));
+
+
+  @Effect()
+  savePO = this.actions$
+  .ofType(AuthActions.SAVE_USERS)
+  .pipe(switchMap((action: AuthActions.SaveUsers) => {
+    
+    let headers = new HttpHeaders();
+    headers.append('Content-Type', 'application/json');
+    headers.append('cache-control', 'no-cache');
+  
+    return this.http.put( 'http://192.168.1.122:82/compras/pog/index.php/saveUsers', 
+      JSON.stringify(action.payload), 
+      {headers: headers})  
+                    
+    }), map((users) => {
+      
+      return {
+        type: AuthActions.SET_USERS_DATA,
+        payload: {users: users, mesg: "Users saved correctly" }
+      } ;
+  }), catchError(error => this.handleError(error)));
+    
 
   @Effect()
   authSignin = this.actions$
@@ -108,6 +151,34 @@ export class AuthEffects {
       this.router.navigate(['/auth/signin']);
     }));
 
-  constructor(private actions$: Actions, private router: Router, private http: HttpClient) {
+  @Effect()
+  checkMissingItems = this.actions$
+  .ofType(AuthActions.CHECK_ITEMS)
+  .pipe(switchMap((action: AuthActions.CheckMissingItems) => {
+    
+    let headers = new HttpHeaders();
+    headers.append('Content-Type', 'application/json');
+    headers.append('cache-control', 'no-cache');
+  
+    return this.http.get('http://192.168.1.122:82/compras/pog/index.php/checkProductsInContpaq', {
+          observe: 'body',
+          responseType: 'json'
+        });
+      }), map((response) => {
+
+        return {
+          type: AuthActions.SET_SUCCESS_MSG,
+          payload: { msg: response }
+        };
+        
+      }), catchError(error => this.handleError(error)));
+  
+
+  constructor(private actions$: Actions, private router: Router, private http: HttpClient) {}
+
+
+  private handleError(error) {
+    console.log(error);
+    return of(new AuthActions.ErrorAction(error.error.text));
   }
 }

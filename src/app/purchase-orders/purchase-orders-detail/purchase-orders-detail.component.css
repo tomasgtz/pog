@@ -25,9 +25,33 @@ input, textarea {
   }
   
   .example-full-width {
-    width: 100%;
+    width: 50%;
   }
 
 ::ng-deep .mat-option-text {
     font-size: 10px;
+}
+
+.k-pdf-export textarea {
+    border: 0px solid white;
+}
+
+.k-pdf-export #buyer {
+    border: 0px solid white;
+}
+
+.k-pdf-export button {
+    display: none;
+}
+
+kendo-pdf-document button, kendo-pdf-document #project_id, kendo-pdf-document #crms_id {
+    display: none;
+}
+
+::ng-deep .mat-input-wrapper{
+    width:400px !important;
+}
+
+.extra-space {
+    margin-left: 5px;
 }

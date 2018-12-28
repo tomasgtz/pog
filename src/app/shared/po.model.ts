@@ -9,7 +9,7 @@ export class PO {
         public folio: number,
         public created_date: string,
         public lineItems: LineItem[],
-        public currencyId: number,
+        public currencyId: string,
         public comments: string,
         public status: string,
         public project: string,

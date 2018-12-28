@@ -36,7 +36,9 @@ export class SalesOrdersService {
                         e.value.assigned_user_name,
                         e.value.date_modified,
                         e.value.terminos_pago_c,
-                        null
+                        null,
+                        false,
+                        "unattended"
                     );
 
                     this.http.get('https://prod-11.southcentralus.logic.azure.com/workflows/e68c1cf592654da18999b01dcf364f43/triggers/manual/paths/invoke/op/' + e.value.folio_c + '?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=g_M7MNV-D478AGbvgR5PhefJfwPfzV4QnciT6EzULaE')
@@ -54,9 +56,8 @@ export class SalesOrdersService {
                                     e.value.description,
                                     e.value.quantity,
                                     e.value.comentarios_c,
-                                    e.value.cost_price,
-                                    0,
-                                    0
+                                    e.value.cost_price,0,0,false
+                                    
                                    )
                                 items.push(item); 
                                });

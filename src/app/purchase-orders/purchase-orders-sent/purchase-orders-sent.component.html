@@ -1,3 +1,28 @@
-<p>
-  purchase-orders-sent works!
-</p>
+<div *ngIf="error" #alert class="alert alert-danger alert-dismissible fade show" role="alert">
+    <button type="button" class="close" aria-label="Close" (click)="closeAlert()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <strong>Error</strong> {{error}}
+  </div>
+  
+  <div class="container container-fluid">
+      <div class="row scrollable">
+        <div class="col-md-12" >
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">P.O.</th>
+                <th scope="col">Provider</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let order of processed" (click)="selectProcessed(order)">
+                  <td>{{ order.id }}</td>
+                  <td>{{ order.provider_name  }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  <i class="fa fa-plus-circle fa-4x" aria-hidden="true"></i>

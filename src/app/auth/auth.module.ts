@@ -5,7 +5,6 @@ import { AuthComponent } from "./auth.component";
 import { SigninComponent } from "./signin/signin.component";
 import { UsersComponent } from "./users/users.component";
 import { HttpClientModule } from '@angular/common/http';
-import { DropdownDirective } from '../shared/dropdown.directive';
 
 import {
     SocialLoginModule,
@@ -14,6 +13,10 @@ import {
 } from "angular5-social-login";
 import { SharedModule } from '../shared/shared.module';
 import { AuthGuard } from './auth-guard.service';
+import { SignupComponent } from './signup/signup.component';
+import { USERAllowedPipe, USERNotAllowedPipe } from '../shared/user.pipe';
+
+import {  ReactiveFormsModule } from '@angular/forms';
 
 export function getAuthServiceConfigs() {
   let config = new AuthServiceConfig(
@@ -32,12 +35,16 @@ export function getAuthServiceConfigs() {
     AuthRoutingModule,
 	  SocialLoginModule,
     HttpClientModule,
-    SharedModule
+    SharedModule,
+    ReactiveFormsModule
   ],
   declarations: [
     AuthComponent,
     SigninComponent,
-    UsersComponent
+    UsersComponent,
+    SignupComponent,
+    USERAllowedPipe, 
+    USERNotAllowedPipe
   ],
   providers: [
     AuthGuard, 

@@ -14,15 +14,29 @@ import * as AuthActions from '../../auth/store/auth.actions';
 export class HeaderComponent implements OnInit {
 
    authState: Observable<any>;
+   message: string;
 
   constructor(private store: Store<fromApp.AppState>) {
   }
 
   ngOnInit() {
     this.authState = this.store.select('auth');
+        
+    this.authState.subscribe((authState: fromAuth.AuthState) => {
+      this.message = authState.successMessage;
+      
+    })
   }
 
   onLogout() {
     this.store.dispatch(new AuthActions.Logout());
+  }
+
+  missingProducts() {
+    this.store.dispatch(new AuthActions.CheckMissingItems())
+  }
+
+  dismiss() {
+    this.message = null;
   }
 }

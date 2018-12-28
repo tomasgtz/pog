@@ -1,0 +1,50 @@
+<div class="container container-fluid text-center">
+    <div class="backg">
+    <div class="row centered-form">
+    <div class="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4">
+
+        <div *ngIf="success" #alert class="alert alert-success alert-dismissible fade show" role="alert">
+            <button type="button" class="close" aria-label="Close" (click)="closeAlert()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <span>User has been registered, please contact any existing user for approval.</span>
+          </div>
+        
+      <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row logo" style="padding: 35px;">
+                <img src="/assets/img/icons/POG.JPG">
+            </div>
+          
+         </div>
+         <div class="panel-body">
+            <div class="col-lg-12" style="padding: 20px;">
+              <h4 class="panel-title">Please sign up for POG</h4>
+            </div>
+            <p><small>Access may be given by any existing user</small></p>
+            <form role="form" style="padding: 10px" [formGroup]="loginForm">
+            
+            <br><br>
+            <div class="form-group">
+              <input type="email" name="email" id="email" class="form-control input-sm" placeholder="Email Address" formControlName="email">
+              <div *ngIf="(loginForm.get('email').dirty || loginForm.get('email').touched) && loginForm.get('email').errors" class="alert alert-danger">
+                  <div *ngIf="(loginForm.get('email').dirty || loginForm.get('email').touched) && loginForm.get('email').errors['required']">
+                    Email is required
+                  </div>
+                  <div *ngIf="(loginForm.get('email').dirty || loginForm.get('email').touched) && loginForm.get('email').errors['email']">
+                    invalid email, please check
+                  </div>
+                </div>
+            </div>
+
+            <input type="button" value="Register" class="btn btn-info btn-block" (click)="signUp()">
+            <input type="button" value="Already have an account?" class="btn btn-info btn-block" (click)="signIn()">
+          
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+

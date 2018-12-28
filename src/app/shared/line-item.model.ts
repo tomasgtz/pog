@@ -8,7 +8,8 @@ export class LineItem {
         public comments: string,
         public cost: number,
         public status: number,
-        public oc: number
+        public oc: number,
+        public lineSelected: boolean = false
     ) {
 
         this.model = model;
@@ -18,5 +19,6 @@ export class LineItem {
         this.cost = cost;
         this.status = 0;
         this.oc = oc;
+        this.lineSelected = lineSelected;
     }
 }
