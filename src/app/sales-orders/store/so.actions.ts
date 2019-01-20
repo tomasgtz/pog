@@ -5,6 +5,8 @@ import { LineItem } from 'src/app/shared/line-item.model';
 export const UPDATE_SEARCH_FILTERS = 'UPDATE_SEARCH_FILTERS';
 export const SELECT_ORDER = 'SELECT_ORDER';
 export const SET_TRANSFER_ITEMS = 'SET_TRANSFER_ITEMS';
+export const CHECK_SO_STATUS = 'CHECK_SO_STATUS';
+export const SO_ERROR = 'SO_ERROR';
 
 export class UpdateSearchFilters implements Action {
   readonly type = UPDATE_SEARCH_FILTERS;
@@ -21,9 +23,23 @@ export class SelectOrder implements Action {
 export class SetItemsToTransfer implements Action {
   readonly type = SET_TRANSFER_ITEMS;
 
-  constructor(public payload: LineItem[]) {  }
+  constructor(public payload: LineItem[]) {  
+
+    console.log("se recibe la accion de poner items en el store", payload.slice(0));
+  }
+}
+
+export class CheckSOStatus implements Action {
+  readonly type = CHECK_SO_STATUS;
+  
+}
+
+export class ErrorAction implements Action {
+  readonly type = SO_ERROR;
+  
+  constructor(public payload: any) {}
 }
 
 
 
-export type SOActions = UpdateSearchFilters | SelectOrder | SetItemsToTransfer;
+export type SOActions = UpdateSearchFilters | SelectOrder | SetItemsToTransfer | CheckSOStatus | ErrorAction;

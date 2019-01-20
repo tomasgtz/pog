@@ -28,7 +28,7 @@ export class UsersComponent implements OnInit {
     this.authState = this.store.select('auth');
     this.authState.subscribe((authState: fromAuth.AuthState) => {
 
-      this.success = authState.successMessage;
+      this.success = authState.successMessage.users;
       this.users = authState.users;
      
     });

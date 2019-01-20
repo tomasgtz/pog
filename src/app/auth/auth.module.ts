@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 
 import { AuthRoutingModule } from "./auth-routing.module";
-import { AuthComponent } from "./auth.component";
 import { SigninComponent } from "./signin/signin.component";
 import { UsersComponent } from "./users/users.component";
 import { HttpClientModule } from '@angular/common/http';
@@ -23,7 +22,7 @@ export function getAuthServiceConfigs() {
       [
         {
           id: GoogleLoginProvider.PROVIDER_ID,
-          provider: new GoogleLoginProvider("1078384584362-pslq17jtp1lrcsqhv52horu7tjt9bdqc.apps.googleusercontent.com")
+          provider: new GoogleLoginProvider("1078384584362-nbcvv535f1olm4h2fsrk5fl1h09b1cki.apps.googleusercontent.com")
         }
       ]
   );
@@ -39,7 +38,7 @@ export function getAuthServiceConfigs() {
     ReactiveFormsModule
   ],
   declarations: [
-    AuthComponent,
+    
     SigninComponent,
     UsersComponent,
     SignupComponent,

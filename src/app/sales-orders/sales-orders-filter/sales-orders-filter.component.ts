@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl } from '../../../../node_modules/@angular/forms';
 
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducers';
 import * as SOActions from '../store/so.actions';
+import { SalesOrdersService } from '../sales-orders.service';
 
 
 @Component({
@@ -11,7 +12,8 @@ import * as SOActions from '../store/so.actions';
   templateUrl: './sales-orders-filter.component.html',
   styleUrls: ['./sales-orders-filter.component.css']
 })
-export class SalesOrdersFilterComponent implements OnInit {
+export class SalesOrdersFilterComponent implements OnInit, OnDestroy {
+ 
 
   filterForm: FormGroup;
   checks: boolean[] = [];
@@ -30,14 +32,21 @@ export class SalesOrdersFilterComponent implements OnInit {
     this.filterForm.valueChanges.subscribe(
       (value) => {
         this.checks = value;
-        console.log(this.checks);
+        
         this.updateChecks();
       }
     );
   }
 
+  ngOnDestroy(): void {
+   
+    this.checks = [false,false,false,false];
+    this.updateChecks();
+  }
+
   updateChecks() {
     this.store.dispatch(new SOActions.UpdateSearchFilters(this.checks));
   }
+
 
 }

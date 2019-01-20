@@ -7,7 +7,7 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="nav navbar-nav navbar-right">
             <ng-template [ngIf]="!(authState | async).authenticated">
-              <li><a routerLink="/auth/signin">Log in </a></li>
+              <li><a routerLink="/auth/signin" class="link">Log in </a></li>
             </ng-template>
           </ul>
           <ul class="nav navbar-nav navbar-right">
@@ -17,21 +17,21 @@
             
             <li><span class="link" *ngIf="(authState | async).authenticated" (click)="onLogout()" >Log out </span></li>
       
-            <li routerLinkActive="active"><a routerLink="/sales-orders" *ngIf="(authState | async).authenticated"> Process Orders</a></li>
+            <li routerLinkActive="active"><a routerLink="/sales-orders" *ngIf="(authState | async).authenticated" class="link"> Process Orders</a></li>
 
             <li><span class="link" *ngIf="(authState | async).authenticated" (click)="missingProducts()"> Missing Products </span></li>
               
-            <li class="dropdown" appDropdown *ngIf="(authState | async).authenticated">
-              <a style="cursor: pointer;" class="dropdown-toggle" role="button">User <span class="caret"></span></a>
+            <li class="dropdown link" appDropdown *ngIf="(authState | async).authenticated">
+              <a style="cursor: pointer;" class="dropdown-toggle link" role="button">User <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a style="cursor: pointer;" routerLink="/auth/users">Manage</a></li>
+                <li><a style="cursor: pointer;" class="link" routerLink="/auth/users">Manage</a></li>
               </ul>
             </li>
 
             <li *ngIf="message">
               <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 {{ message }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="dismiss()">
+                <button type="button" class="close link" data-dismiss="alert" aria-label="Close" (click)="dismiss()">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>

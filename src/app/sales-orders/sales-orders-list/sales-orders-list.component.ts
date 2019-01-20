@@ -8,7 +8,7 @@ import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducers';
 import * as fromSO from '../store/so.reducers';
 import * as SOActions from '../store/so.actions';
-
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-sales-orders-list',
@@ -22,14 +22,15 @@ export class SalesOrdersListComponent implements OnInit, OnDestroy {
   filters;
   soState: Observable<fromSO.State>;
 
-  constructor(private salesOrdersService: SalesOrdersService, private store: Store<fromApp.AppState>) { }
+  constructor(private salesOrdersService: SalesOrdersService, private store: Store<fromApp.AppState>, private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
-
+    this.spinner.show();
     this.subscription = this.salesOrdersService.loadPendingOrders().subscribe(
       (orders: Order[]) => {
 
         this.orders = orders;
+        this.spinner.hide();
       }
     )
 
@@ -44,6 +45,9 @@ export class SalesOrdersListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.orders = [];
+    this.filters = null;
+    return this.store.dispatch(new SOActions.SelectOrder(null));
   }
 
 
@@ -51,6 +55,10 @@ export class SalesOrdersListComponent implements OnInit, OnDestroy {
     
     return this.store.dispatch(new SOActions.SelectOrder(order));
     
+  }
+
+  reload() {
+    this.ngOnInit();
   }
 
 }

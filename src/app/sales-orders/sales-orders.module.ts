@@ -14,6 +14,7 @@ import { SOControlPipe, SOCMHPipe, SOEOLPipe, SOSSPipe } from '../shared/un.pipe
 import { PurchaseOrdersModule } from '../purchase-orders/purchase-orders.module';
 import { DndListModule } from 'ngx-drag-and-drop-lists';
 import { AuthGuard } from '../auth/auth-guard.service';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { AuthGuard } from '../auth/auth-guard.service';
     FormsModule,
     ReactiveFormsModule,
     PurchaseOrdersModule,
-    DndListModule
+    DndListModule,
+    NgxSpinnerModule
   ],
   declarations: [
     SalesOrdersComponent,

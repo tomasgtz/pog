@@ -1,5 +1,6 @@
 <ng-template [ngIf]="(order)">
 <div class="container container-fluid">
+  <span>CRM: <b>{{order.folio_c}}</b></span>
   <div class="row scrollable">
     <div class="row">
       <div class="col-md-12" >
@@ -42,6 +43,7 @@
               <th scope="col">Description</th>
               <th scope="col">Comments</th>
               <th scope="col">Cost</th>
+              <th scope="col">Total</th>
             </tr>
           </thead>
           <tbody >
@@ -61,10 +63,15 @@
               <td>{{ item.model }}</td>
               <td>{{ item.description }}</td>
               <td>{{ item.comments }}</td>
-              <td>{{ item.cost }}</td>
+              <td>{{ item.cost | currency }}</td>
+              <td>{{ item.cost * item.quantity | currency }}</td>
+            </tr>
+            <tr>
+              <td colspan="7" class="bg-info text-right"><h4> Total: {{ order.subtotal | currency }}</h4></td>
             </tr>
           </tbody>
         </table>
+        
         <div class="btn-group" role="group" aria-label="Basic example">
             <button *ngIf="order.lineItems && order.lineItems.length > 0" type="submit" class="btn btn-primary"><i class="fa fa-arrow-down"></i> Process</button>
         </div>

@@ -6,14 +6,15 @@ export class PO {
         public id: string,
         public provider: string,
         public provider_name: string,
-        public folio: number,
-        public created_date: string,
+        public folio: string,
+        public created_date: any,
         public lineItems: LineItem[],
         public currencyId: string,
         public comments: string,
         public status: string,
         public project: string,
-        public creator: string
+        public creator: string,
+        public subtotal: number
         
     ) {
 
@@ -28,5 +29,6 @@ export class PO {
         this.status = status;
         this.project = project;
         this.creator = creator;
+        this.subtotal = subtotal;
     }
 }

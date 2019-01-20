@@ -18,7 +18,9 @@ export class Order {
         public credit: string,
         public lineItems: LineItem[],
         public selectedAll: boolean = false,
-        public status: string
+        public status: string,
+        public projectId: string,
+        public subtotal: number
     ) {
 
         this.sugarId = sugarId;
@@ -37,6 +39,7 @@ export class Order {
         this.lineItems = lineItems;
         this.selectedAll = selectedAll;
         this.status = status;
-        
+        this.projectId = projectId;
+        this.subtotal = subtotal;
     }
 }

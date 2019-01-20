@@ -61,4 +61,8 @@ export class PurchaseOrdersDraftComponent implements OnInit {
     this.store.dispatch(new POActions.SetPO(draft)); 
   }
 
+  createNewPO(){
+    this.store.dispatch(new POActions.SetPO(new PO('0','','','0','',[],'','','draft','','',0))); 
+  }
+
 }

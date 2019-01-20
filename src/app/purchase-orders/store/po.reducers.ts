@@ -15,7 +15,7 @@ export interface State {
 
 const initialState: State = {
   providers: [],
-  po: new PO('0','','',0,'',[],"0",'','','',''),
+  po: new PO('0','0','','0','',[],'0','','','','',0),
   error: null,
   success: null,
   drafts: null,
@@ -80,6 +80,21 @@ export function poReducer(state = initialState, action: POActions.POActions) {
         error: null,
         success: "PO saved successfully",
         po: {...state.po, id: action.payload}
+      };
+
+    case (POActions.PO_SENT_SUCCESSFULLY): 
+      return {
+        ...state,
+        error: null,
+        success: "PO sent to contpaq successfully. Folio = " + action.payload,
+        po: {...state.po, folio: action.payload}
+      };
+
+    case (POActions.PO_DELETED_SUCCESSFULLY): 
+      return {
+        ...state,
+        error: null,
+        success: "PO deleted successfully"
       };
     
     default:

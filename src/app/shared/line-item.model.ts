@@ -7,8 +7,9 @@ export class LineItem {
         public quantity: number,
         public comments: string,
         public cost: number,
+        public subtotal: number,
         public status: number,
-        public oc: number,
+        public oc: string,
         public lineSelected: boolean = false
     ) {
 
@@ -17,6 +18,7 @@ export class LineItem {
         this.quantity = quantity;
         this.comments = comments;
         this.cost = cost;
+        this.subtotal = subtotal;
         this.status = 0;
         this.oc = oc;
         this.lineSelected = lineSelected;

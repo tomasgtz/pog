@@ -6,12 +6,14 @@ export interface State {
   checks;
   selected_order: Order;
   items_to_transfer: LineItem[];
+  error: string;
 }
 
 const initialState: State = {
   checks: {'ckhCMH': false, 'ckhCTRL': false, 'ckhSS': false, 'ckhEOL': false},
   selected_order: null,
-  items_to_transfer: []
+  items_to_transfer: [],
+  error: null
 };
 
 export function soReducer(state = initialState, action: SOActions.SOActions) {
@@ -27,7 +29,6 @@ export function soReducer(state = initialState, action: SOActions.SOActions) {
     }
       
     case (SOActions.SELECT_ORDER): {
-      console.log("Dispara el cargar orden y limpia los transfer");
     return {
       ...state,
       selected_order: action.payload,
@@ -35,13 +36,22 @@ export function soReducer(state = initialState, action: SOActions.SOActions) {
     };
   }
 
-    case (SOActions.SET_TRANSFER_ITEMS): 
-      return {
-        ...state,
-        items_to_transfer: action.payload
-      };
-       
-    default:
-      return state;
+  case (SOActions.SET_TRANSFER_ITEMS): 
+  {
+    console.log("reducers", action.payload);
+    return {
+      ...state,
+      items_to_transfer: action.payload
+    };
+  }
+  
+  case (SOActions.SO_ERROR): 
+    return {
+      ...state,
+      error: "Error: " + action.payload
+    };
+  
+  default:
+    return state;
   }
 }

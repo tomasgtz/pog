@@ -26,6 +26,7 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { SOEffects } from './sales-orders/store/so.effects';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PDFExportModule } from '@progress/kendo-angular-pdf-export';
+import { AppGuard } from './app-guard.service';
 
 
 
@@ -50,7 +51,9 @@ import { PDFExportModule } from '@progress/kendo-angular-pdf-export';
     AngularFontAwesomeModule,
     PDFExportModule
   ],
-  providers: [],
+  providers: [
+    AppGuard
+  ],
   bootstrap: [AppComponent],
   exports: [
     BrowserAnimationsModule

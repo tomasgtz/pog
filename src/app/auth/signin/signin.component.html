@@ -1,3 +1,10 @@
+<div *ngIf="error" #alert class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" aria-label="Close" (click)="closeAlert()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <span>{{error}}</span>
+      </div>
+
 <div class="container container-fluid text-center">
     <div class="backg">
         <div class="row centered-form">
@@ -19,7 +26,10 @@
                                 </div>
                                 <br><br>
                                 <div class="bottom text-center">
-                                    <span> New here ? <a href="#"><b>Check tutorial</b></a></span>
+                                    <span> New here ? <a href="/assets/manual/index.html" target="_blank"><b>Check tutorial</b></a></span>
+                                </div>
+                                <div class="bottom text-center">
+                                    <span> Technical problems ? <a href="/assets/manual/technical.html" target="_blank"><b>Technical reference</b></a></span>
                                 </div>
                                 <br><br>
                                 

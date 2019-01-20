@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable, of } from '../../../../node_modules/rxjs';
+import { Component, OnInit, OnDestroy, ɵConsole } from '@angular/core';
+import { Observable, of, Subscription } from '../../../../node_modules/rxjs';
 
 import { Order } from '../../shared/order.model';
 import { LineItem } from '../../shared/line-item.model';
@@ -17,40 +17,80 @@ import { NgForm } from '@angular/forms';
   templateUrl: './sales-orders-process.component.html',
   styleUrls: ['./sales-orders-process.component.css']
 })
-export class SalesOrdersProcessComponent implements OnInit {
+export class SalesOrdersProcessComponent implements OnInit, OnDestroy {
+  
   order: Order;
   soState: Observable<fromSO.State>;
   selectAll: boolean = false;
   list: LineItem[] = [];
-  
+  subscription_soState: Subscription;
+
+  observable_order: Observable<Order>;
+  subscription_order: Subscription;
   
   constructor(private store: Store<fromApp.AppState>) { }
+
+  ngOnDestroy(): void {
+    this.soState = new Observable();
+    this.selectAll = false;
+    this.list = [];
+    this.order = null;
+      
+    this.subscription_soState.unsubscribe();
+    this.subscription_order.unsubscribe();
+    
+    this.store.dispatch(new SOActions.SetItemsToTransfer([]));
+
+  }
 
   ngOnInit() {
     this.soState = this.store.select('so');
     
-    this.soState.subscribe((soState: fromSO.State) => {
+    this.subscription_soState = this.soState.subscribe((soState: fromSO.State) => {
       this.order = soState.selected_order;
-      
-      of(this.order).subscribe(order => {
-        //console.log("Carga orden y limpia this list");
+      this.observable_order = of(this.order);
+
+      this.subscription_order = this.observable_order.subscribe(order => {
         this.selectAll = false;
         this.list = [];
       });
+      
+      if(this.order) {
+        this.order.selectedAll = false;
+      }
+
+      if(this.order && this.order.lineItems) {
+        this.order.lineItems.forEach(item => {
+          item.lineSelected = false;
+        });
+      }
     })
   }
 
   selectAllChecks(f: NgForm) {
 
     if(this.selectAll) {
-      //console.log("Entra a limpiar");
-      Object.keys(f.form.controls).forEach(key => {
+
+      Object.keys(f.form.controls).forEach((key,index) => {
         f.form.get(key).setValue(false);
+        
+        if(key != 'chkAll') {
+          
+          this.order.lineItems[index-1].lineSelected = false;
+        
+        }
+        
       });
       this.list = [];
     } else {
-      Object.keys(f.form.controls).forEach(key => {
+      Object.keys(f.form.controls).forEach((key,index) => {
         f.form.get(key).setValue(true);
+        
+        if(key != 'chkAll') {
+  
+          this.order.lineItems[index-1].lineSelected = true;
+        }
+        
       });
       
       this.list = this.order.lineItems.map(x => Object.assign({}, x));
@@ -62,13 +102,13 @@ export class SalesOrdersProcessComponent implements OnInit {
   }
 
   updateList(i, item) {
-
-    console.log("item selected " , item.selected);
-    if(item.selected === undefined) {
-      item.selected = false;
-    }
     
-    if(item.selected === false) {
+    if(item.lineSelected === undefined) {
+      item.lineSelected = true;
+    }
+
+    if(item.lineSelected === false) {
+
       const id = this.list.findIndex(itemOfList => (item.model === itemOfList.model));
       const id2 = this.order.lineItems.findIndex(itemOfOrder => (item.model === itemOfOrder.model));
       
@@ -79,41 +119,37 @@ export class SalesOrdersProcessComponent implements OnInit {
       }
       
     } else {
+
       let id = this.list.findIndex(itemOfList => (item.model === itemOfList.model));
       this.list.splice(id, 1);
     }
 
-    console.log("despues de agregar un item" , this.list);
-
   }
 
   onSubmit() {
-    //console.log("send items", this.list);
+
     let list2 = this.list.map(x => Object.assign({}, x));
 
-    //console.log(list2);
-
-    console.log("this.list" , this.list.length, "this.order.lineItems", this.order.lineItems.length)
-    if(this.list.length == this.order.lineItems.length) {
-      this.order.status = "attended";
-    } else {
-      this.order.status = "attendedp"
-    }
-
-    this.store.dispatch(new SOActions.SetItemsToTransfer(list2));
-
-    
-    
-
-    //console.log("this list after store", this.list);
-    /*this.list.forEach((item) => {
-
-      let id = this.order.lineItems.findIndex(itemOfOrder => (item.model === itemOfOrder.model));
-      if(id !== -1) {
-        this.order.lineItems.splice(id, 1);
+    list2.forEach((item, idx) => {
+      if(item.model == 'YV-FLETE' || item.model == 'YV-INSTAL') {
+        list2.splice(idx, 1);
       }
 
-    });*/
+
+    });
+
+    if(list2.length > 0) {
+      /*if(this.list.length == this.order.lineItems.length) {
+        this.order.status = "attended";
+      } else {
+        this.order.status = "attendedp" // order processed partially, only some items were sent to a PO
+      }*/
+  
+      this.store.dispatch(new SOActions.SetItemsToTransfer(list2));
+
+      
+    }
+   
   }
 
 }

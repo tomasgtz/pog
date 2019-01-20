@@ -6,7 +6,7 @@ export interface AuthState {
   authenticated: boolean;
   name: string;
   image: string;
-  successMessage: string;
+  successMessage: {header: string, users: string}
   error: any;
   users: any
 }
@@ -16,7 +16,7 @@ const initialState: AuthState = {
   authenticated: false,
   name: '',
   image: '',
-  successMessage: '',
+  successMessage: {header: '', users: ''},
   error: null,
   users: []
 };
@@ -34,7 +34,7 @@ export function authReducer(state = initialState, action: AuthActions.AuthAction
       return {
         ...state,
         authenticated: false,
-        successMessage: action.payload
+        successMessage: {header: '', users: action.payload }
 
       };
     };
@@ -63,17 +63,19 @@ export function authReducer(state = initialState, action: AuthActions.AuthAction
       return {
         ...state,
         users: action.payload.users,
-        successMessage: action.payload.mesg
+        successMessage: {header: '', users: action.payload.mesg }
       };
-    case (AuthActions.AUTH_ERROR): 
+    case (AuthActions.AUTH_ERROR): {
       return {
         ...state,
         error: "Error: " + action.payload
       };
+    }
+     
     case (AuthActions.SET_SUCCESS_MSG):
       return {
         ...state,
-        successMessage: action.payload.msg
+        successMessage: {header: action.payload.msg, users: '' }
       }
     default:
       return state;

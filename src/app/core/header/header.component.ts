@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit {
     this.authState = this.store.select('auth');
         
     this.authState.subscribe((authState: fromAuth.AuthState) => {
-      this.message = authState.successMessage;
+      this.message = authState.successMessage.header;
       
     })
   }

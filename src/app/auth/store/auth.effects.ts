@@ -6,7 +6,8 @@ import { from, Observable, pipe, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import * as AuthActions from './auth.actions';
-
+import { Store } from '@ngrx/store';
+import * as fromApp from '../../store/app.reducers';
 
 @Injectable()
 export class AuthEffects {
@@ -27,11 +28,11 @@ export class AuthEffects {
         //console.log(params);
         return this.http.post('http://192.168.1.122:82/compras/pog/index.php/SignUp', params, {headers: headers})
         .pipe(map((response: Response) => {
-              console.log(response);
+            //  console.log(response);
           if(response + "" === "ok") {
             return {
               type: AuthActions.SIGNUP,
-              payload: "ok"
+              payload: "Access requested"
             };
           }
           
@@ -88,33 +89,32 @@ export class AuthEffects {
         return action.payload;
       })
       , switchMap((authData: { username: string, token: string, name: string, image: string }) => {
-        
+
       let json = JSON.stringify( authData );
       let params = "json=" + json;
       let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
        
       return this.http.post('http://192.168.1.122:82/compras/pog/index.php/Authentication', params, {headers: headers})
       //return this.http.get('http://localhost/pog/index.php')
-         .pipe(map((response: Response) => {
-                   
-          return {
-                authorization: response + "", 
-                token: authData.token,
-                name: authData.name,
-                image: authData.image
-              };
-          
+         .pipe(map((response: string) => {
+            
+            return {
+              authorization: response + "", 
+              token: authData.token,
+              name: authData.name,
+              image: authData.image
+            };
+                  
       }));
     })
-      
       , map((responseFromContpaq: { authorization: string, token: string, name:string, image:string }) => {
-       
-          if (responseFromContpaq.authorization == '1' && responseFromContpaq.token != '') {
-           
+        
+          if (responseFromContpaq.authorization === '1') {
+            
             return responseFromContpaq;
           }
 
-          responseFromContpaq.authorization = 'no token';
+          responseFromContpaq.token = 'no token';
           
           return responseFromContpaq;
       })
@@ -136,13 +136,22 @@ export class AuthEffects {
             }
           ];
         } else {
+          
           this.router.navigate(['/auth/signin']);
           return [
             {
               type: AuthActions.LOGOUT
+            },
+            {
+              type: AuthActions.AUTH_ERROR,
+              payload: 'Access denied'
             }];
         }
-      })); 
+      }), catchError((err,caught) => {
+  
+        this.store.dispatch(new AuthActions.ErrorAction(err.error.error + " txt " + err.error.text)); 
+        return caught;
+     })); 
 
   @Effect({dispatch: false})
   authLogout = this.actions$
@@ -171,14 +180,17 @@ export class AuthEffects {
           payload: { msg: response }
         };
         
-      }), catchError(error => this.handleError(error)));
+      }), catchError((err,caught) => {
+  
+        this.store.dispatch(new AuthActions.ErrorAction(err.error.error + " txt " + err.error.text)); 
+        return caught;
+     }));
   
 
-  constructor(private actions$: Actions, private router: Router, private http: HttpClient) {}
+  constructor(private actions$: Actions, private router: Router, private http: HttpClient, private store: Store<fromApp.AppState>) {}
 
 
   private handleError(error) {
-    console.log(error);
     return of(new AuthActions.ErrorAction(error.error.text));
   }
 }

@@ -1,5 +1,9 @@
 
 <div class="container container-fluid">
+    <ngx-spinner bdColor = "rgba(23,162,184,1)" size = "default"  color = "#fff" type = "ball-clip-rotate" ></ngx-spinner>
+    <div class="form-check form-check-inline">
+      <button (click)="reload()" class="btn btn-warning btn-sm extra-space"><i class="fas fa-sync-alt"></i></button>
+    </div>
   <div class="row scrollable">
     <div class="col-md-12" >
       <table class="table table-striped">
@@ -30,7 +34,7 @@
               <td>{{ order.assigned_user_name }}</td>
               <td>{{ order.date_modified }}</td>
           </tr>
-          <tr *ngFor="let order of (filters.chkCMH ? (orders | SOCMH): (null))" (click)="selectOrder(order)">
+          <tr *ngFor="let order of (filters.chkCMH ? (orders | SOCMH): (null))" (click)="selectOrder(order)" [ngClass]="order.status">
               <td>{{ order.folio_c }}</td>
               <td>{{ order.sdi_llc_c }}</td>
               <td>{{ order.flete_express_c }}</td>
@@ -42,7 +46,7 @@
               <td>{{ order.assigned_user_name }}</td>
               <td>{{ order.date_modified }}</td>
           </tr>
-          <tr *ngFor="let order of (filters.chkSS ? (orders | SOSS): (null))" (click)="selectOrder(order)">
+          <tr *ngFor="let order of (filters.chkSS ? (orders | SOSS): (null))" (click)="selectOrder(order)" [ngClass]="order.status">
               <td>{{ order.folio_c }}</td>
               <td>{{ order.sdi_llc_c }}</td>
               <td>{{ order.flete_express_c }}</td>
@@ -54,7 +58,7 @@
               <td>{{ order.assigned_user_name }}</td>
               <td>{{ order.date_modified }}</td>
           </tr>
-          <tr *ngFor="let order of (filters.chkEOL ? (orders | SOEOL): (null))" (click)="selectOrder(order)">
+          <tr *ngFor="let order of (filters.chkEOL ? (orders | SOEOL): (null))" (click)="selectOrder(order)" [ngClass]="order.status">
               <td>{{ order.folio_c }}</td>
               <td>{{ order.sdi_llc_c }}</td>
               <td>{{ order.flete_express_c }}</td>

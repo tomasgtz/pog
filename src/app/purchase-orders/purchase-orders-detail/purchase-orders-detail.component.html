@@ -12,25 +12,20 @@
     </button>
     <strong><i class="fa fa-2x fa-thumbs-up"></i></strong> {{success}}
   </div>
-
-
-<button type="button" class="btn btn-outline-secondary btn-sm" (click)="isCollapsed = !isCollapsed"
-[attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample"><i class="fa fa-eye-slash"></i> header</button> 
-
-
-
+  <button type="button" class="btn btn-outline-info btn-sm" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample"><i class="fa fa-eye-slash"></i></button> 
     <form [formGroup]="poForm">
     <kendo-pdf-export #pdf paperSize="Letter" margin="0.5cm" [scale]="0.8" landscape="true">
   <div class="row" [ngbCollapse]="isCollapsed">
-    <div class="row" style="margin-left: 35px">
-      <div class="col-xs-12">
+    
+      <div class="col">
+        <div class="rounded border border-info" style="width: 100%;">
         <div class="row">
           <div class="col-xs-1">
             <div class="form-group">
-              <label for="id" class="col-lg-2 control-label col-sm-2 col-md-2 col-xs-2">ID</label>
+              <label for="id" class="col-lg-1 control-label col-sm-1 col-md-1 col-xs-1">ID</label>
               <div class="col-lg-3 col-sm-2 col-md-2 col-xs-2">
-                <mat-form-field >
-                    <input matInput formControlName="id">
+                <mat-form-field style="width: 50px">
+                    <input matInput formControlName="id" readonly>
                   </mat-form-field>
               </div>
             </div>
@@ -39,7 +34,7 @@
             <div class="form-group">
                 <label for="date_created" class="col-lg-2 control-label col-sm-2 col-md-2 col-xs-2">Date</label>
                 <div class="col-lg-3 col-sm-2 col-md-2 col-xs-2">
-                  <mat-form-field>
+                  <mat-form-field style="width: 140px">
                     <input id="date_created" matInput formControlName="date_created" [matDatepicker]="picker" >
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
@@ -51,7 +46,7 @@
             <div class="form-group">
                 <label for="provider" class="col-lg-2 control-label col-sm-2 col-md-2 col-xs-2">Provider</label>
                 <div class="col-lg-6 col-sm-6 col-md-6 col-xs-6">
-                <mat-form-field style="width: 300px;">
+                <mat-form-field style="width: 219px;">
                 
                   <input type="text" id="provider" matInput [formControl]="providerCtrl" formControlName="provider" ngDefaultControl  [matAutocomplete]="auto">
                   
@@ -68,38 +63,27 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-2">
+        
+          <div class="col-xs-1">
             <div class="form-group">
-              <label for="buyer" class="col-lg-2 control-label col-sm-2 col-md-2 col-xs-2">Buyer</label>
-             
-                <input
-                  type="text"
-                  id="buyer"
-                  formControlName="buyer"
-                  readonly
-                  class="form-control form-control-sm">
-              
+              <label for="buyer" class="col-lg-1 control-label col-sm-1 col-md-1 col-xs-1">Buyer</label>
+                <input type="text" id="buyer" formControlName="buyer" readonly class="form-control form-control-sm" >
             </div>
           </div>
           <div class="col-xs-1">
             <div class="form-group" id="project_id">
               <label for="project" class="col-lg-2 control-label col-sm-2 col-md-2 col-xs-2">Project</label>
-                
-                  <input
-                    type="text"
-                    id="project"
-                    formControlName="project"
-                    class="form-control form-control-sm">
-                
+                  <input type="text" id="project" formControlName="project" class="form-control form-control-sm" style="width: 80px;">
             </div>
           </div>
-          <div class="col-xs-12">
+        </div>
+        <div class="row" style="margin-left: 0px;">
+        
+          <div class="col-xs-2">
               <div class="form-group">
                   <label for="currencyId" class="col-lg-2 control-label col-sm-2 col-md-2 col-xs-2">Currency</label>
                   <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12">
-                    <mat-form-field >
+                    <mat-form-field style="width: 40px;">
                       <input type="text" id="currencyId" formControlName="currencyId" ngDefaultControl matInput  [matAutocomplete]="curr">
                         <mat-autocomplete #curr="matAutocomplete">
                           <mat-option *ngFor="let currency of currencies"
@@ -114,54 +98,53 @@
                   </div>  
                 </div>
             </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-6">
-            <div class="form-group">
-              <label for="comments">Comments</label>
-              <textarea
-                type="text"
-                id="comments"
-                class="form-control form-control-sm"
-                formControlName="comments"
-                rows="6" cols="60"></textarea>
-            </div>
-          </div>
-          <div class="col-xs-6">
-              <div class="form-group" id="crms_id">
-                <label for="sos_included">CRMs included</label>
-                <textarea
-                  type="text"
-                  id="sos_included"
-                  class="form-control form-control-sm"
-                  formControlName="sos_included"
-                  rows="6" cols="20"></textarea>
+            <div class="col-xs-6">
+              <div class="form-group">
+                <label for="comments">Comments</label>
+                <textarea  type="text" id="comments" class="form-control form-control-sm" formControlName="comments" rows="6" cols="60"></textarea>
               </div>
-          </div>
+            </div>
+            <div class="col-xs-4">
+                <div class="form-group" id="crms_id">
+                  <label for="sos_included">CRMs included</label>
+                  <textarea
+                    type="text"
+                    id="sos_included"
+                    class="form-control form-control-sm"
+                    formControlName="sos_included"
+                    rows="6" cols="20"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 0px;">
+          
+          
         </div>
         <div class="row">
 
         </div>
-        <div class="row">
+      </div>
+        <div class="row" style="padding: 5px;">
           <div class="col-xs-12">
             <button 
               type="button"
               class="btn btn-success btn-sm extra-space"
               (click) = "saveThisPO()"
+              [disabled]="!poForm.valid || po.status == 'sent'"
               >Save</button>
-            <button type="button" class="btn btn-danger btn-sm extra-space" >Cancel</button>
-            <button kendo-button (click)="pdf.saveAs('invoice.pdf')" class="btn btn-outline-info btn-sm extra-space"> Save As PDF... </button>
+              <button class="btn btn-warning btn-sm extra-space" [disabled]="po.status == 'sent' || (!poForm.valid && po.id != null)" (click) = "contpaq()"> <i class="fa fa-share"> Contpaq</i></button>
+            <button *ngIf="po.id != '0' && po.id != '' && po.status != 'sent'" type="button" class="btn btn-danger btn-sm extra-space" (click)="deletePO()">Discard DRAFT</button>
+            <button kendo-button (click)="pdf.saveAs('PO - SDI ' + po.id  + '.pdf')" [disabled]="poForm.controls.poLineItems['controls'].length == 0 " class="btn btn-outline-danger btn-sm extra-space"> Create PDF </button>
+            <button (click)="exportCsv()" [disabled]="poForm.controls.poLineItems['controls'].length == 0 && po.status == 'draft'" class="btn btn-outline-success btn-sm extra-space"> Create CSV </button>
+
           </div>
         </div>
       </div>
     </div>
-  </div>
+  
   <div class="row">
     <div class="col-md-12" ><!--  -->
-      <table class="table table-striped" [dndList]
-      [dndPlaceholder]="placeholder2"
-      [dndModel]="po.lineItems"
-      (dndInserted)="addItem()" 
+      <table class="table table-striped" 
       formArrayName="poLineItems"
       >
         <thead>
@@ -171,26 +154,19 @@
             <th scope="col">Description</th>
             <th scope="col">Comments</th>
             <th scope="col">Cost</th>
+            <th scope="col">Total</th>
             <th scope="col">OC</th>
           </tr>
         </thead>
-        <tbody > 
-          <!-- <tr *ngFor="let item of po.lineItems" [dndType]="'lineItem'" [dndDraggable] (dndMoved) = "removeItem(item)" [dndObject]="item" >
-            <td style="width: 60px;" > {{item.quantity}} </td>
-            <td >{{item.model}}</td> 
-            <td style="width: 250px;">{{item.description}}</td>
-            <td> {{item.comments}} </td>
-            <td>{{item.cost}}</td>
-            <td>{{ item.oc }}</td>
-          </tr>-->
-          
+        <tbody *ngIf="poForm.controls.poLineItems"> 
+                    
           <tr *ngFor="let item of poForm.controls.poLineItems['controls']; let j = index" [formGroupName]="j">
-            <td style="width: 60px;" >
+            <td style="width: 80px;" >
                <input
                   type="text"
                   id="quantity{{j}}"
-                  class="form-control"
-                  formControlName="quantity">
+                  class="form-control" style="padding: 0;"
+                  formControlName="quantity" (change)="calcRowTotal(j)">
             </td>
             <td ><span *ngIf="lineItems[j]">{{ lineItems[j].model }}</span></td> 
             <td style="width: 250px;"><span *ngIf="lineItems[j]">{{ lineItems[j].description }}</span></td>
@@ -202,10 +178,13 @@
                   formControlName="comments"
                   rows="2" cols="30"></textarea>
               </td>
-            <td><span *ngIf="lineItems[j]">{{ lineItems[j].cost }}</span></td>
+            <td><span *ngIf="lineItems[j]">{{ lineItems[j].cost | currency }}</span></td>
+            <td><span *ngIf="lineItems[j]">{{ lineItems[j].subtotal | currency }}</span></td>
             <td><span *ngIf="lineItems[j]">{{ lineItems[j].oc }}</span></td>
           </tr>
-
+          <tr>
+              <td colspan="7" class="bg-info text-right"><h4> Total: {{ subtotal | currency }}</h4></td>
+            </tr>
         </tbody>
       </table>
     </div>
