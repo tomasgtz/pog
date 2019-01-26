@@ -21,20 +21,32 @@ export class SalesOrdersService {
                 const mapped = Object.entries(response).map(([type, value]) => ({type, value}));
                 
                 mapped.forEach(e => {
-                    //console.log(e.value);
+                    console.log(e.value);
                     let projectId = "";
                     let incluir = true;
 
+                    // get PROJECT ID
                     if((e.value.name+"").toLocaleUpperCase().substring(0,3) === "PRY") {
                         projectId = e.value.folio_c;
                     }
-
+                    // not include orders 100 Orden but not payment is confirmed
                     if(e.value.terminos_pago_c == "100_Orden" && e.value.pagado_c == false ) {
                         incluir = false;
                     }
                     
+                    // not show on HOLD
                     if(e.value.etapa_c == "on_hold") {
                         incluir = false;
+                    }
+                    
+                    // allow orders less than 2500 USD even if not payment is confirmed
+                    if(e.value.terminos_pago_c == "100_Orden" && parseInt(e.value.subtotal_descontado_c) < 2500 ) {
+                        incluir = true;
+                    }
+
+                    // allow orders WEB with metodo_pago_c = 04()Tarjeta_Debito or 28(Tarjeta_Credito)
+                    if((e.value.name+"").toUpperCase().includes("WEB") && (e.value.metodo_pago_c == "Tarjeta_Debito" || e.value.metodo_pago_c == "Tarjeta_Credito")) {
+                        incluir = true;
                     }
 
                     if(e.value.date_processed_c == "" && e.value.etapa_principal_c == "ganada" && incluir) {

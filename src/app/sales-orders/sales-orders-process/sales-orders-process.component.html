@@ -73,7 +73,7 @@
         </table>
         
         <div class="btn-group" role="group" aria-label="Basic example">
-            <button *ngIf="order.lineItems && order.lineItems.length > 0" type="submit" class="btn btn-primary"><i class="fa fa-arrow-down"></i> Process</button>
+            <button *ngIf="order.lineItems && order.lineItems.length > 0" type="submit" class="btn btn-primary" [disabled]="btnDisabled"><i class="fa fa-arrow-down"></i> Process</button>
         </div>
         
         </form>

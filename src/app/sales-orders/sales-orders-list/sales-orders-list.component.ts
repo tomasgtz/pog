@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Pipe } from '@angular/core';
 import { SalesOrdersService } from '../sales-orders.service';
-import { Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 import { Observable } from 'rxjs';
 
 import { Order } from '../../shared/order.model';
@@ -9,6 +9,7 @@ import * as fromApp from '../../store/app.reducers';
 import * as fromSO from '../store/so.reducers';
 import * as SOActions from '../store/so.actions';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { tap, flatMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sales-orders-list',
@@ -26,13 +27,13 @@ export class SalesOrdersListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.spinner.show();
-    this.subscription = this.salesOrdersService.loadPendingOrders().subscribe(
+    
+    this.subscription = timer(100, 30 * 1000).pipe(tap(v => this.spinner.show()), flatMap(() => this.salesOrdersService.loadPendingOrders()) ).subscribe(
       (orders: Order[]) => {
-
+      
         this.orders = orders;
         this.spinner.hide();
-      }
-    )
+      });
 
     this.orders = this.salesOrdersService.getPendingOrders();
     this.soState = this.store.select('so');

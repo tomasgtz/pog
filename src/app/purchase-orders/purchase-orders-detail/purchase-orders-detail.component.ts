@@ -390,6 +390,7 @@ export class PurchaseOrdersDetailComponent implements OnInit, OnDestroy {
 
   contpaq(){
     this.store.dispatch(new POActions.SendToContpaq(this.po.id));
+    this.po.status = 'sent';
   }
 
   exportCsv() {

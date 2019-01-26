@@ -4,7 +4,8 @@ i, .i {
 
 .table-striped>tbody>tr:nth-child(even)>td, 
       .table-striped>tbody>tr:nth-child(even)>th {
-       background-color: lightcyan;
+       background-color: rgb(160, 231, 241);
+       
 }
 
 .table-striped>tbody>tr:nth-child(odd)>td, 

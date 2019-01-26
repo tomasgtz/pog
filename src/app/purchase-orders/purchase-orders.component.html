@@ -1,4 +1,8 @@
-<!-- Nav tabs -->
+
+  
+<!-- Tab panes -->
+<div class="container container-fluid">
+  <!-- Nav tabs -->
 <ul class="nav nav-tabs">
     <li class="nav-item" [ngClass]="{'active': showDrafts }">
       <a class="nav-link"  data-toggle="tab" (click)="show('drafts')" ><i class="fa fa-file"></i> Drafts</a>
@@ -8,8 +12,6 @@
     </li>
   </ul>
   
-<!-- Tab panes -->
-<div class="container container-fluid">
   <div class="row scrollable">
     <div class="col-md-12" >
       <div  id="draft" *ngIf="showDrafts"><app-purchase-orders-draft></app-purchase-orders-draft></div>

@@ -24,6 +24,7 @@ export class SalesOrdersProcessComponent implements OnInit, OnDestroy {
   selectAll: boolean = false;
   list: LineItem[] = [];
   subscription_soState: Subscription;
+  btnDisabled: boolean = false;
 
   observable_order: Observable<Order>;
   subscription_order: Subscription;
@@ -139,11 +140,9 @@ export class SalesOrdersProcessComponent implements OnInit, OnDestroy {
     });
 
     if(list2.length > 0) {
-      /*if(this.list.length == this.order.lineItems.length) {
-        this.order.status = "attended";
-      } else {
-        this.order.status = "attendedp" // order processed partially, only some items were sent to a PO
-      }*/
+      if(this.list.length == this.order.lineItems.length) {
+        this.btnDisabled = true;
+      } 
   
       this.store.dispatch(new SOActions.SetItemsToTransfer(list2));
 
