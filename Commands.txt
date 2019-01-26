@@ -1,0 +1,23 @@
+comando para compilar la app en produccion
+te deja el codigo en dist/pog
+ng build --prod --aot --base-href /pog/
+
+comando para correr la app en dev
+ng build --prod --aot --disable-host-check
+
+comandos para subir al repo
+git status
+git add .
+git commit -m "comentarios"
+git push
+
+comando para instalar nuevas libs a la app
+primero te vas al folder del proyecto y ejecutas
+npm install --save LIBRERIA
+ejemplo: npm install --save ngx-spinner
+
+comando para ejecutar composer en el 122
+"C:/php7/php.exe" "C:/composer/composer.phar" require guzzlehttp/guzzle:~6.0
+
+consola de dev
+https://console.developers.google.com/apis/credentials?project=sdi-pog&organizationId=235467331755
