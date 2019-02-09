@@ -34,11 +34,6 @@ export class SalesOrdersService {
                         incluir = false;
                     }
                     
-                    // not show on HOLD
-                    if(e.value.etapa_c == "on_hold") {
-                        incluir = false;
-                    }
-                    
                     // allow orders less than 2500 USD even if not payment is confirmed
                     if(e.value.terminos_pago_c == "100_Orden" && parseInt(e.value.subtotal_descontado_c) < 2500 ) {
                         incluir = true;
@@ -47,6 +42,11 @@ export class SalesOrdersService {
                     // allow orders WEB with metodo_pago_c = 04()Tarjeta_Debito or 28(Tarjeta_Credito)
                     if((e.value.name+"").toUpperCase().includes("WEB") && (e.value.metodo_pago_c == "Tarjeta_Debito" || e.value.metodo_pago_c == "Tarjeta_Credito")) {
                         incluir = true;
+                    }
+
+                    // not show on HOLD
+                    if(e.value.etapa_c == "on_hold" || e.value.etapa_c == "cancelado") {
+                        incluir = false;
                     }
 
                     if(e.value.date_processed_c == "" && e.value.etapa_principal_c == "ganada" && incluir) {

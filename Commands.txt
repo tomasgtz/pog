@@ -21,3 +21,6 @@ comando para ejecutar composer en el 122
 
 consola de dev
 https://console.developers.google.com/apis/credentials?project=sdi-pog&organizationId=235467331755
+
+query para hacer que suba los datos nuevamente a sugar
+ update [COMPRAS].[dbo].[Crms] set status_crm = null where crm = 88910

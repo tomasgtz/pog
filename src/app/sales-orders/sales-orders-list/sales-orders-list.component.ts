@@ -28,7 +28,7 @@ export class SalesOrdersListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.spinner.show();
     
-    this.subscription = timer(100, 30 * 1000).pipe(tap(v => this.spinner.show()), flatMap(() => this.salesOrdersService.loadPendingOrders()) ).subscribe(
+    this.subscription = timer(100, 60 * 1000).pipe(tap(v => this.spinner.show()), flatMap(() => this.salesOrdersService.loadPendingOrders()) ).subscribe(
       (orders: Order[]) => {
       
         this.orders = orders;

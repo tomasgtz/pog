@@ -50,6 +50,7 @@ export class PurchaseOrdersDetailComponent implements OnInit, OnDestroy {
   currencies = [{id:'1', name:'MXN'},{id:'2', name:'USD'},{id:'3', name:'EUR'}];
   error;
   success: string;
+  success_items_reserved: string;
   poLineItems: FormArray = new FormArray([]);
   //providers2: Provider[];
   username: string = '';
@@ -303,24 +304,31 @@ export class PurchaseOrdersDetailComponent implements OnInit, OnDestroy {
 
       if(result === "error") {
         if(confirm("Stock file is not available. Do you want to proceed?") ) {
-          this.saveInDB();
+          this.saveInDB([]);
         }
-      } else if(result !== "no items"){
+      } else if(result !== "no items") {
         this.removeReservedItemsFromThisPO(result['items']);
-        this.saveInDB();
+        this.saveInDB(result['items']);
       } else {
-        this.saveInDB();
+        this.saveInDB([]);
       }
 
     });
   }
 
-  saveInDB() {
+  saveInDB(inventory_items_reserved) {
     
     const provId = this.searchProviderID(this.po.provider);
     const currId = this.searchCurrencyID(this.po.currencyId);
     this.po.provider = provId;
     this.po.currencyId = currId;
+    
+    if (inventory_items_reserved.length > 0 ) {
+      inventory_items_reserved.forEach( item => {
+        this.success_items_reserved = "[model =" + item.model + " qty = " + item.quantity + "] , ";
+      });
+      
+    }
 
     this.store.dispatch(new POActions.SavePurchaseOrder(this.po));
     //this.store.dispatch(new SOActions.CheckSOStatus());
@@ -348,6 +356,7 @@ export class PurchaseOrdersDetailComponent implements OnInit, OnDestroy {
   closeAlert() {
     this.error = null;
     this.success = null;
+    this.success_items_reserved = null;
   }
 
   searchProviderName(id: string) {

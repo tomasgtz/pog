@@ -47,11 +47,13 @@ export class SalesOrdersProcessComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.soState = this.store.select('so');
     
+    
     this.subscription_soState = this.soState.subscribe((soState: fromSO.State) => {
       this.order = soState.selected_order;
       this.observable_order = of(this.order);
 
       this.subscription_order = this.observable_order.subscribe(order => {
+        this.btnDisabled = false;
         this.selectAll = false;
         this.list = [];
       });
@@ -132,10 +134,18 @@ export class SalesOrdersProcessComponent implements OnInit, OnDestroy {
     let list2 = this.list.map(x => Object.assign({}, x));
 
     list2.forEach((item, idx) => {
-      if(item.model == 'YV-FLETE' || item.model == 'YV-INSTAL') {
+      if(item.model == 'YV-FLETE' || 
+         item.model == 'YV-INSTAL' || 
+         item.model == 'YV-ADMONXPS' || 
+         item.model == 'YV-PARTEXTRA' || 
+         item.model == 'YV-SERVICIOLIMPIEZA' || 
+         item.model == 'YV-CERTIFICADO' || 
+         item.model == 'YV-CURSOBASICO' || 
+         item.model == 'YV-CURSOAVANZADO'
+         ) {
         list2.splice(idx, 1);
       }
-
+     
 
     });
 

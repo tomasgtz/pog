@@ -12,6 +12,14 @@
     </button>
     <strong><i class="fa fa-2x fa-thumbs-up"></i></strong> {{success}}
   </div>
+
+  <div *ngIf="success_items_reserved" #alert class="alert alert-success alert-dismissible fade show" role="alert">
+    <button type="button" class="close" aria-label="Close" (click)="closeAlert()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <strong><i class="fa fa-2x fa-thumbs-up"></i></strong> {{success_items_reserved}}
+  </div>
+
   <button type="button" class="btn btn-outline-info btn-sm" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample"><i class="fa fa-eye-slash"></i></button> 
     <form [formGroup]="poForm">
     <kendo-pdf-export #pdf paperSize="Letter" margin="0.5cm" [scale]="0.8" landscape="true">
