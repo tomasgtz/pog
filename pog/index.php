@@ -7,21 +7,25 @@ ini_set('display_errors', 'on');
 error_reporting(E_ALL);
 date_default_timezone_set('America/Monterrey');
 
-define( 'API_ACCESS_KEY', '' );
+define( 'API_ACCESS_KEY', 'AIzaSyBherwZbWKLAG1ZpIQvo1NbIyZjuoFYJ6o' );
 define( 'USER', 'compras' );
-define( 'PASS', '' );
+define( 'PASS', 'SDIcompras' );
 define( 'DSN', 'sqlsrv:server=CRM-SDI;Database=COMPRAS;' );
 
 define( 'USER2', 'sa' );
-define( 'PASS2', '' );
+define( 'PASS2', 'sdi$SERVER91' );
 define( 'DSN2', 'sqlsrv:server=SERVER\alactech;Database=ad1609SDI;' );
 
 define( 'USER3', 'sa' );
-define( 'PASS3', '' );
+define( 'PASS3', 'sdi$SERVER91' );
 define( 'DSN3', 'sqlsrv:server=SERVER\alactech;Database=adDESARROLLO;' );
 
 
-
+// google api spreadsheets
+//Client ID 1078384584362-cl46bveaod0r6g06uhrcvgchtqfddohu.apps.googleusercontent.com
+//secret C89krmX-DbfIONusal5C_0Bm
+// 4/sgCtPFpJXC8DRmZXAsmHe-VSQ5Rqdj5J5hDjmUGZh-i7UIZ18QN21cc
+// 4/sgDxG-03dGhdbgRQjvnLHraD3OzcGyJwmFZfggGDTUjACTZh_yfCzmw
 
 //require_once dirname(__FILE__) . '/vendor/PHPExcel-1.8/Classes/PHPExcel.php';
 require_once  './InventoryActions.class.php';
@@ -39,7 +43,7 @@ $configuration = [
 $c = new \Slim\Container($configuration);
 $app = new \Slim\App($c);
 
-
+try { 
 $app->post(
 		'/Authentication', function(Request $request, Response $response) {
 
@@ -199,7 +203,7 @@ $app->get(
 				$cn=new PDO(DSN2, USER2, PASS2);
 				$cn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
 
-				$stmt = $cn->prepare("SELECT CIDCLIENTEPROVEEDOR as contpaqId, CRAZONSOCIAL as name FROM [ad1609SDI].[dbo].[admClientes] 
+				$stmt = $cn->prepare("SELECT CIDCLIENTEPROVEEDOR as contpaqId, CRAZONSOCIAL as name, CDIASCREDITOPROVEEDOR as cdias, CIDMONEDA as currency, CIMPUESTOPROVEEDOR1 as tax_rate FROM [ad1609SDI].[dbo].[admClientes] 
 				WHERE CTIPOCLIENTE=3 AND CESTATUS=1");
 				$return = '';
 				$stmt->execute();
@@ -232,8 +236,8 @@ $app->put(
 
 					$q = "INSERT INTO [COMPRAS].[dbo].[PurchaseOrders] 
 					(CIDDOCUMENTODE,CIDCONCEPTODOCUMENTO,CFOLIO,CFECHA,CIDCLIENTEPROVEEDOR,CRAZONSOCIAL,CIDMONEDA,
-					COBSERVACIONES,CNETO,CTOTALUNIDADES,CTEXTOEXTRA2,CIMPORTEEXTRA2,CUSUARIO,status,PROYECTO) 
-					VALUES (17,19,0,'".$create_date->format('Y-m-d')."',".$data['provider'].",'',".(int)$data['currencyId'].",'" . $data['comments']."',".(float)$data['subtotal'].",0,'',0,'".$data['creator']."','draft','".$data['project']."')";
+					COBSERVACIONES,CNETO,CTOTALUNIDADES,CTEXTOEXTRA2,CIMPORTEEXTRA2,CUSUARIO,status,PROYECTO,CDIASCREDITOPROVEEDOR) 
+					VALUES (17,19,0,'".$create_date->format('Y-m-d')."',".$data['provider'].",'',".(int)$data['currencyId'].",'" . $data['comments']."',".(float)$data['subtotal'].",0,'',0,'".$data['creator']."','draft','".$data['project']."','".$data['payment_terms']."')";
 
 					$stmt = $cn->prepare($q);			
 
@@ -245,7 +249,7 @@ $app->put(
 					
 					$stmt = $cn->prepare("UPDATE [COMPRAS].[dbo].[PurchaseOrders] 
 					SET CNETO = :4, CIDCLIENTEPROVEEDOR = :5, CIDMONEDA = :7,
-					COBSERVACIONES = :8, CUSUARIO = :11, PROYECTO = :12 WHERE CIDDOCUMENTO = :13");
+					COBSERVACIONES = :8, CUSUARIO = :11, PROYECTO = :12, CDIASCREDITOPROVEEDOR = :14 WHERE CIDDOCUMENTO = :13");
 					
 					$subtotal = $data['subtotal'];
 					$stmt->bindParam(':4', $subtotal );
@@ -255,6 +259,7 @@ $app->put(
 					$stmt->bindParam(':11', $data['creator'] );
 					$stmt->bindParam(':12', $data['project'] );
 					$stmt->bindParam(':13', $data['id'] );
+					$stmt->bindParam(':14', $data['payment_terms'] );
 		
 					$return = '';
 					$stmt->execute();
@@ -333,7 +338,7 @@ $app->get(
 				$stmt = $cn->prepare("SELECT CIDDOCUMENTO as id, CFOLIO as folio, CONCAT(CONVERT(VARCHAR(10), CFECHA, 120),'T00:00:00.000Z') as created_date, 
 				CIDCLIENTEPROVEEDOR as provider, CRAZONSOCIAL as provider_name, CIDMONEDA as currencyId, 
 				COBSERVACIONES as comments, CNETO as subtotal, CTOTALUNIDADES, CTEXTOEXTRA2, CIMPORTEEXTRA2, 
-				CUSUARIO as creator, PROYECTO as project, status FROM [COMPRAS].[dbo].[PurchaseOrders] 
+				CUSUARIO as creator, PROYECTO as project, status, CDIASCREDITOPROVEEDOR as payment_terms FROM [COMPRAS].[dbo].[PurchaseOrders] 
 				WHERE status='draft' ORDER BY id");
 				$return = '';
 				$stmt->execute();
@@ -341,7 +346,7 @@ $app->get(
 
 				if($return != null && is_array($return) && count($return) > 0) { 
 					foreach($return as $i => &$draft) {
-						$stmt = $cn->prepare("SELECT CNUMEROMOVIMIENTO, PRODUCTO as model, CDESCRIPTION as description, CUNIDADES as quantity, CPRECIO as cost, CPRECIO * CUNIDADES as subtotal, COBSERVAMOV as comments, CFECHA, STATUS as status, CRMs as oc FROM [COMPRAS].[dbo].[PurchaseOrdersDetails] 
+						$stmt = $cn->prepare("SELECT CNUMEROMOVIMIENTO, PRODUCTO as model, CDESCRIPTION as description, CUNIDADES as quantity, CPRECIO as cost, CPRECIO * CUNIDADES as subtotal, CUNIDADES * CPRECIO as subtotal, COBSERVAMOV as comments, CFECHA, STATUS as status, CRMs as oc FROM [COMPRAS].[dbo].[PurchaseOrdersDetails] 
 						WHERE CIDDOCUMENTO=:1 ORDER BY CNUMEROMOVIMIENTO");
 						$stmt->bindParam(':1', $draft['id']);
 						$stmt->execute();
@@ -377,7 +382,7 @@ $app->get(
 				$stmt = $cn->prepare("SELECT CIDDOCUMENTO as id, CFOLIO as folio, CFECHA as created_date, 
 				CIDCLIENTEPROVEEDOR as provider, CRAZONSOCIAL as provider_name, CIDMONEDA as currencyId, 
 				COBSERVACIONES as comments, CNETO as subtotal, CTOTALUNIDADES, CTEXTOEXTRA2, CIMPORTEEXTRA2, 
-				CUSUARIO as creator, PROYECTO as project, status FROM [COMPRAS].[dbo].[PurchaseOrders] 
+				CUSUARIO as creator, PROYECTO as project, status, CDIASCREDITOPROVEEDOR as payment_terms FROM [COMPRAS].[dbo].[PurchaseOrders] 
 				WHERE status='sent' AND CFECHA >= getdate() - 7 ORDER BY created_date DESC");
 				$return = '';
 				$stmt->execute();
@@ -385,7 +390,7 @@ $app->get(
 
 				if($return != null && is_array($return) && count($return) > 0) { 
 					foreach($return as $i => &$draft) {
-						$stmt = $cn->prepare("SELECT CNUMEROMOVIMIENTO, PRODUCTO as model, CDESCRIPTION as description, CUNIDADES as quantity, CPRECIO as cost, COBSERVAMOV as comments, CFECHA, STATUS as status, CRMs as oc FROM [COMPRAS].[dbo].[PurchaseOrdersDetails] 
+						$stmt = $cn->prepare("SELECT CNUMEROMOVIMIENTO, PRODUCTO as model, CDESCRIPTION as description, CUNIDADES as quantity, CPRECIO as cost, CUNIDADES * CPRECIO as subtotal, COBSERVAMOV as comments, CFECHA, STATUS as status, CRMs as oc FROM [COMPRAS].[dbo].[PurchaseOrdersDetails] 
 						WHERE CIDDOCUMENTO=:1 ORDER BY CNUMEROMOVIMIENTO");
 						$stmt->bindParam(':1', $draft['id']);
 						$stmt->execute();
@@ -479,7 +484,7 @@ $app->post(
 				$values = $inv->readSpreadSheet();
 
 				if ($values !== true) {
-					throw new Exception("No inventory data found.");
+					$response->getBody()->write( json_encode(array('error'=>"No inventory data found.")));
 				} 
 
 				$reservedItems = $inv->searchAndUpdateItems($data);
@@ -925,7 +930,7 @@ $app->get(
 							$cn=new PDO(DSN, USER, PASS);
 							$cn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-							$q = "UPDATE [COMPRAS].[dbo].[Crms] SET status = '$status' WHERE crm = '".$res->crm."' ";
+							$q = "UPDATE [COMPRAS].[dbo].[Crms] SET status = '$status' WHERE crm = '".$res->crm."' AND forced <> 1";
 							//echo $q."<br>";
 							$stmt = $cn->prepare($q);
 							$stmt->execute();
@@ -1066,7 +1071,48 @@ $app->get(
 
 
 
+$app->post(
+		'/set_order_as_complete', function(Request $request, Response $response) {
+			
+			try
+			{
+				$data = $request->getParsedBody();
+
+				if(!isset($data['folio']) || empty($data['folio'])) {
+					throw new Exception("no folio");
+				}
+	
+				$folio = $data['folio'];
+				
+				$cn=new PDO(DSN, USER, PASS);
+				$cn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
+				$q = "UPDATE [COMPRAS].[dbo].[Crms] SET status = 2, forced = 1 WHERE crm = $folio ";
+
+				$stmt = $cn->prepare($q);
+				$stmt->execute();
+
+				$responseObj['success'] = 'complete';
+				
+				$cn = null;
+				$response->getBody()->write( json_encode($responseObj) );
+
+			}
+			catch(Exception $e) {
+								
+				$response->getBody()->write( json_encode(array('error'=>$e->getMessage())));
+				return;
+			}			
+		}
+);
+
+
+
+
 $app->run();
+
+} catch(Exception $e) {
+	echo json_encode(array('error'=>'Critical error'));
+}
 
 
 function getProviders($crm) {

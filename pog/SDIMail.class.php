@@ -21,19 +21,19 @@ class SDIMail {
 				$mail->isSMTP();                                      // Set mailer to use SMTP
 				$mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
 				$mail->SMTPAuth = true;                               // Enable SMTP authentication
-				$mail->Username = '@sdindustrial.com.mx';                 // SMTP username
-				$mail->Password = '';                           // SMTP password
+				$mail->Username = 'no-reply@sdindustrial.com.mx';                 // SMTP username
+				$mail->Password = 'sdinor3357';                           // SMTP password
 				$mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
 				$mail->Port = 587;                                    // TCP port to connect to
 
 				//Recipients
-				$mail->setFrom('@sdindustrial.com.mx', 'POG');
-				$mail->addAddress('@sdindustrial.com.mx', 'Tom');     // Add a recipient
+				$mail->setFrom('no-reply@sdindustrial.com.mx', 'POG');
+				$mail->addAddress('tomas@sdindustrial.com.mx', 'Tom');     // Add a recipient
 	//			$mail->addAddress('ellen@example.com');               // Name is optional
 	//			$mail->addReplyTo('info@example.com', 'Information');
-				$mail->addCC('@sdindustrial.com.mx');
-				$mail->addCC('@sdindustrial.com.mx');
-				$mail->addCC('@sdindustrial.com.mx');
+				$mail->addCC('kacosta@sdindustrial.com.mx');
+				$mail->addCC('avaldez@sdindustrial.com.mx');
+				$mail->addCC('jalmora@sdindustrial.com.mx');
 	//			$mail->addCC('cc@example.com');
 	//			$mail->addBCC('bcc@example.com');
 
@@ -77,16 +77,16 @@ class SDIMail {
 				$mail->isSMTP();                                      // Set mailer to use SMTP
 				$mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
 				$mail->SMTPAuth = true;                               // Enable SMTP authentication
-				$mail->Username = '@sdindustrial.com.mx';                 // SMTP username
-				$mail->Password = '';                           // SMTP password
+				$mail->Username = 'no-reply@sdindustrial.com.mx';                 // SMTP username
+				$mail->Password = 'sdinor3357';                           // SMTP password
 				$mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
 				$mail->Port = 587;                                    // TCP port to connect to
 
 				//Recipients
-				$mail->setFrom('@sdindustrial.com.mx', 'POG');
-				$mail->addAddress('@sdindustrial.com.mx', 'Tom');     // Add a recipient
-				$mail->addCC('@sdindustrial.com.mx');
-				$mail->addCC('@sdindustrial.com.mx');
+				$mail->setFrom('no-reply@sdindustrial.com.mx', 'POG');
+				$mail->addAddress('tomas@sdindustrial.com.mx', 'Tom');     // Add a recipient
+				$mail->addCC('kacosta@sdindustrial.com.mx');
+				$mail->addCC('avaldez@sdindustrial.com.mx');
 	//			$mail->addAddress('ellen@example.com');               // Name is optional
 	//			$mail->addReplyTo('info@example.com', 'Information');
 	//			$mail->addCC('cc@example.com');
