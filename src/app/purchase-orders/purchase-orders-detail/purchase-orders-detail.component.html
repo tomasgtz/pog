@@ -23,7 +23,27 @@
   <button type="button" class="btn btn-outline-info btn-sm" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample"><i class="fa fa-eye-slash"></i></button> 
     <form [formGroup]="poForm">
     <kendo-pdf-export #pdf paperSize="Letter" margin="0.5cm" [scale]="0.8" landscape="true">
-  <div class="row" [ngbCollapse]="isCollapsed">
+
+    <div class="row hidd" id="pdf-header">
+      <div class="col-md-3"><img src="assets/img/logo.jpg" width="200px"></div>
+      <div class="col-md-3 txt-small">Bill to: <br>
+        <b>Soporte Dinámico Industrial S.A. de C.V.<br>
+        R.F.C. SDI060830KK1</b><br>
+        Zona Poniente 510, Colonia Chapultepec<br>
+        San Nicolás de los Garza Nuevo León<br>
+        C.P. 66450
+      </div>
+      <div class="col-md-3 txt-small">Ship to: <br>
+        Zona Poniente 510, Colonia Chapultepec<br>
+        San Nicolás de los Garza Nuevo León<br>
+        C.P. 66450
+      </div>
+      <div class="col-md-3 txt-small">Orden de compra: OC{{po.folio}}<br>
+        Order Date: {{po.created_date | date: 'yyyy/MM/dd'}}<br>
+        Payment terms: {{po.payment_terms}}<br>
+        Shipping Instructions: {{po.creator}}</div>
+    </div>
+  <div class="row" [ngbCollapse]="isCollapsed" id="header-screen">
     
       <div class="col">
         <div class="rounded border border-info" style="width: 100%;">
@@ -33,7 +53,7 @@
               <label for="id" class="col-lg-1 control-label col-sm-1 col-md-1 col-xs-1">ID</label>
               <div class="col-lg-3 col-sm-2 col-md-2 col-xs-2">
                 <mat-form-field style="width: 50px">
-                    <input matInput formControlName="id" readonly>
+                    <input matInput formControlName="id" readonly >
                   </mat-form-field>
               </div>
             </div>
@@ -52,11 +72,11 @@
           </div>
           <div class="col-lg-4">
             <div class="form-group">
-                <label for="provider" class="col-lg-2 control-label col-sm-2 col-md-2 col-xs-2">Provider</label>
+                <label for="provider" class="col-lg-2 control-label col-sm-2 col-md-2 col-xs-2">Supplier name</label>
                 <div class="col-lg-6 col-sm-6 col-md-6 col-xs-6">
                 <mat-form-field style="width: 219px;">
                 
-                  <input type="text" id="provider" matInput [formControl]="providerCtrl" formControlName="provider" ngDefaultControl  [matAutocomplete]="auto">
+                  <input type="text" id="provider" matInput [formControl]="providerCtrl" formControlName="provider" ngDefaultControl  [matAutocomplete]="auto" (change)="setTaxRate()">
                   
                   <mat-autocomplete #auto="matAutocomplete">
                     <mat-option *ngFor="let provider of providersO | async"
@@ -131,6 +151,7 @@
         <div class="row">
 
         </div>
+        
       </div>
         <div class="row" style="padding: 5px;">
           <div class="col-xs-12">
@@ -149,7 +170,11 @@
         </div>
       </div>
     </div>
-  
+    <div class="row hidd2 txt-small" id="pdf-header-2">
+        <div class="col-sm-2"><b>Currency: </b>{{poForm.value.currencyId}}</div>
+        <div class="col-sm-4"><b>Supplier name: </b>{{this.po.provider}}</div>
+        <div class="col-sm-6"><b>Comments: </b>{{poForm.value.comments}}</div>
+    </div>
   <div class="row">
     <div class="col-md-12" ><!--  -->
       <table class="table table-striped" 
@@ -191,10 +216,28 @@
             <td><span *ngIf="lineItems[j]">{{ lineItems[j].oc }}</span></td>
           </tr>
           <tr>
-              <td colspan="7" class="bg-info text-right"><h4> Total: {{ subtotal | currency }}</h4></td>
-            </tr>
+            <td colspan="7" class="bg-info text-right"><h4> Net Purchase: {{ subtotal | currency }}</h4></td>
+          </tr>
+          <tr>
+            <td colspan="7" class="bg-info text-right"><h4> Purchase Tax: {{ (tax_rate/100) * subtotal | currency }}</h4></td>
+          </tr>
+          <tr>
+            <td colspan="7" class="bg-info text-right"><h4> Total Purchase: {{ subtotal * (1 + (tax_rate/100)) | currency }}</h4></td>
+          </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+  <div class="row hidd" id="pdf-footer">
+    <div class="col-md-6 txt-small">PLEASE CONFIRM THE ORDER AND SHIPPING DATE.<br>
+        SEND TRACKING NUMBER WHEN AVAILABLE,<br>
+        THE INVOICE AND CERTIFICATE OF ORIGIN TO THE MAIL:<br>
+        invoice@sdindustrial.com.mx</div>
+    <div class="col-md-6 txt-small">FOR MEXICAN PROVIDERS ONLY: Si el<br>
+      documento amerita expedir Recibo<br>
+      Electrónico de Pago (REP) favor de<br>
+      enviarlo a siguiente correo<br>
+      complementodepago@sdindustrial.com.mx
     </div>
   </div>
 </kendo-pdf-export>

@@ -36,7 +36,7 @@ export class PurchaseOrdersComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.store.dispatch(new POActions.SetPO(new PO('0','','','0','',[],'','','draft','','',0))); 
+    this.store.dispatch(new POActions.SetPO(new PO('0','','','0','',[],'','','draft','','',0,''))); 
   }
 
 }

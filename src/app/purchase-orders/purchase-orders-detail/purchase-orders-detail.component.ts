@@ -63,6 +63,7 @@ export class PurchaseOrdersDetailComponent implements OnInit, OnDestroy {
   subscription_poState: Subscription;
   observable_lineItems: Observable<any>;
   subscription_lineItems: Subscription;
+  tax_rate: number;
 
   constructor(private store: Store<fromApp.AppState>,   private invService: CheckInventoryService, private datepipe: DatePipe) { }
 
@@ -72,7 +73,7 @@ export class PurchaseOrdersDetailComponent implements OnInit, OnDestroy {
     
     this.subtotal = 0;
     
-    this.po = new PO('','','','0','',this.lineItems, '0', '','draft','',this.username,0);
+    this.po = new PO('','','','0','',this.lineItems, '0', '','draft','',this.username,0,'');
     
     this.error = null;
     this.success = null;
@@ -136,7 +137,7 @@ export class PurchaseOrdersDetailComponent implements OnInit, OnDestroy {
 
     });
 
-    this.po = new PO('','','','0','',this.lineItems, '0', '','draft','',this.username,0);
+    this.po = new PO('','','','0','',this.lineItems, '0', '','draft','',this.username,0,'');
     this.poState = this.store.select('po');
 
     this.subscription_poState = this.poState.subscribe((poState: fromPO.State) => {
@@ -156,6 +157,7 @@ export class PurchaseOrdersDetailComponent implements OnInit, OnDestroy {
       
       this.poForm.get('provider').setValue(this.searchProviderName(poState.po.provider));
       this.poForm.get('currencyId').setValue(this.searchCurrencyName(poState.po.currencyId ));
+      this.tax_rate = this.searchProviderTaxRate(poState.po.provider_name);
       
       if(poState.po.creator !== undefined && poState.po.creator !== '') {
         this.poForm.get('buyer').setValue(poState.po.creator);
@@ -322,6 +324,7 @@ export class PurchaseOrdersDetailComponent implements OnInit, OnDestroy {
     const currId = this.searchCurrencyID(this.po.currencyId);
     this.po.provider = provId;
     this.po.currencyId = currId;
+    this.po.payment_terms = this.searchProviderCDias(provId);
     
     if (inventory_items_reserved.length > 0 ) {
       inventory_items_reserved.forEach( item => {
@@ -377,6 +380,24 @@ export class PurchaseOrdersDetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  searchProviderCDias(id: string) {
+    
+    if(undefined === id || "" === id || "0" === id) {
+      return "";  
+    } else {
+      return this.providers.filter(option => (option.contpaqId == (id)))[0].cdias;
+    }
+  }
+
+  searchProviderTaxRate(name: string) {
+    
+    if(undefined === name || "" === name) {
+      return 0;  
+    } else {
+      return this.providers.filter(option => (option.name == name))[0].tax_rate;
+    }
+  }
+
   searchCurrencyName(id: string) {
     
     if(undefined === id || "" === id || "0" === id) {
@@ -395,6 +416,10 @@ export class PurchaseOrdersDetailComponent implements OnInit, OnDestroy {
       return this.currencies.filter(option => (option.name == name))[0].id;
     }
     
+  }
+
+  setTaxRate() {
+    this.tax_rate = this.searchProviderTaxRate(this.po.provider);
   }
 
   contpaq(){
@@ -425,7 +450,7 @@ export class PurchaseOrdersDetailComponent implements OnInit, OnDestroy {
   deletePO() {
     if(confirm("Are you sure to delete?")) {
       this.store.dispatch(new POActions.DeletePO(this.po.id));
-      this.store.dispatch(new POActions.SetPO(new PO('','','','0','',[], '0', '','draft','',this.username,0)));
+      this.store.dispatch(new POActions.SetPO(new PO('','','','0','',[], '0', '','draft','',this.username,0,'')));
     
       this.store.dispatch(new POActions.GetPODrafts());
     }

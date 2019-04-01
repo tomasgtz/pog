@@ -15,7 +15,7 @@ export interface State {
 
 const initialState: State = {
   providers: [],
-  po: new PO('0','0','','0','',[],'0','','','','',0),
+  po: new PO('0','0','','0','',[],'0','','','','',0,''),
   error: null,
   success: null,
   drafts: null,

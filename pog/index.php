@@ -1029,9 +1029,11 @@ $app->get(
 				}
 				
 				$folios_contpaq = substr($folios_contpaq, 0, -3);
+
+			
 				
 				if($folios_contpaq == '' || $folios_contpaq == '0' || strlen($folios_contpaq) === 0) {
-					break;
+					continue;
 				}
 				
 				//var_dump($crm['id_crm']);				

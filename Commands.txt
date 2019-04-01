@@ -3,7 +3,7 @@ te deja el codigo en dist/pog
 ng build --prod --aot --base-href /pog/
 
 comando para correr la app en dev
-ng build --prod --aot --disable-host-check
+ng serve --prod --aot --disable-host-check
 
 comandos para subir al repo
 git status

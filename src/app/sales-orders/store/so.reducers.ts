@@ -7,13 +7,15 @@ export interface State {
   selected_order: Order;
   items_to_transfer: LineItem[];
   error: string;
+  message: string;
 }
 
 const initialState: State = {
   checks: {'ckhCMH': false, 'ckhCTRL': false, 'ckhSS': false, 'ckhEOL': false},
   selected_order: null,
   items_to_transfer: [],
-  error: null
+  error: null,
+  message: null
 };
 
 export function soReducer(state = initialState, action: SOActions.SOActions) {
@@ -45,11 +47,19 @@ export function soReducer(state = initialState, action: SOActions.SOActions) {
     };
   }
   
-  case (SOActions.SO_ERROR): 
+  case (SOActions.SO_ERROR): {
     return {
       ...state,
       error: "Error: " + action.payload
     };
+  }
+    
+  case (SOActions.SO_SUCCESS):  {
+    return {
+      ...state,
+      message: action.payload
+    };
+  }
   
   default:
     return state;

@@ -7,6 +7,9 @@ export const SELECT_ORDER = 'SELECT_ORDER';
 export const SET_TRANSFER_ITEMS = 'SET_TRANSFER_ITEMS';
 export const CHECK_SO_STATUS = 'CHECK_SO_STATUS';
 export const SO_ERROR = 'SO_ERROR';
+export const SO_SUCCESS = 'SO_SUCCESS';
+export const SO_AS_COMPLETE = 'SO_AS_COMPLETE';
+
 
 export class UpdateSearchFilters implements Action {
   readonly type = UPDATE_SEARCH_FILTERS;
@@ -40,6 +43,18 @@ export class ErrorAction implements Action {
   constructor(public payload: any) {}
 }
 
+export class SuccessAction implements Action {
+  readonly type = SO_SUCCESS;
+  
+  constructor(public payload: any) {}
+}
 
 
-export type SOActions = UpdateSearchFilters | SelectOrder | SetItemsToTransfer | CheckSOStatus | ErrorAction;
+export class SetOrderAsComplete implements Action {
+  readonly type = SO_AS_COMPLETE;
+
+}  
+
+
+
+export type SOActions = UpdateSearchFilters | SelectOrder | SetItemsToTransfer | CheckSOStatus | ErrorAction | SuccessAction | SetOrderAsComplete;

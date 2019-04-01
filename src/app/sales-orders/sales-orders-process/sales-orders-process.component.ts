@@ -25,6 +25,8 @@ export class SalesOrdersProcessComponent implements OnInit, OnDestroy {
   list: LineItem[] = [];
   subscription_soState: Subscription;
   btnDisabled: boolean = false;
+  btnMarkDisabled: boolean = false;
+  success: string;
 
   observable_order: Observable<Order>;
   subscription_order: Subscription;
@@ -36,6 +38,7 @@ export class SalesOrdersProcessComponent implements OnInit, OnDestroy {
     this.selectAll = false;
     this.list = [];
     this.order = null;
+    this.success = null;
       
     this.subscription_soState.unsubscribe();
     this.subscription_order.unsubscribe();
@@ -50,10 +53,12 @@ export class SalesOrdersProcessComponent implements OnInit, OnDestroy {
     
     this.subscription_soState = this.soState.subscribe((soState: fromSO.State) => {
       this.order = soState.selected_order;
+      this.success = soState.message;
       this.observable_order = of(this.order);
 
       this.subscription_order = this.observable_order.subscribe(order => {
         this.btnDisabled = false;
+        this.btnMarkDisabled = false;
         this.selectAll = false;
         this.list = [];
       });
@@ -159,6 +164,18 @@ export class SalesOrdersProcessComponent implements OnInit, OnDestroy {
       
     }
    
+  }
+
+  masrkAsProcessed() {
+    this.btnMarkDisabled = true;
+    this.btnDisabled = true;
+
+    this.store.dispatch(new SOActions.SetOrderAsComplete());
+
+  }
+
+  closeAlert() {
+    this.success = null;
   }
 
 }

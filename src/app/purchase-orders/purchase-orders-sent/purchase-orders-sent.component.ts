@@ -62,7 +62,7 @@ export class PurchaseOrdersSentComponent implements OnInit {
   }
 
   createNewPO(){
-    this.store.dispatch(new POActions.SetPO(new PO('0','','','0','',[],'','','draft','','',0))); 
+    this.store.dispatch(new POActions.SetPO(new PO('0','','','0','',[],'','','draft','','',0,''))); 
   }
 
 }

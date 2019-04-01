@@ -1,6 +1,12 @@
 <ng-template [ngIf]="(order)">
 <div class="container container-fluid">
   <span>CRM: <b>{{order.folio_c}}</b></span>
+  <div *ngIf="success" #alert class="alert alert-success alert-dismissible fade show" role="alert">
+    <button type="button" class="close" aria-label="Close" (click)="closeAlert()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <strong><i class="fa fa-2x fa-thumbs-up"></i></strong> {{success}}
+  </div>
   <div class="row scrollable">
     <div class="row">
       <div class="col-md-12" >
@@ -72,8 +78,9 @@
           </tbody>
         </table>
         
-        <div class="btn-group" role="group" aria-label="Basic example">
+        <div class="btn-group" role="group" aria-label="Process Sales Order">
             <button *ngIf="order.lineItems && order.lineItems.length > 0" type="submit" class="btn btn-primary" [disabled]="btnDisabled"><i class="fa fa-arrow-down"></i> Process</button>
+            <button *ngIf="order.lineItems && order.lineItems.length > 0" type="button" (click)="masrkAsProcessed()" class="btn btn-secondary" [disabled]="btnMarkDisabled"><i class="fa fa-arrow-down"></i> Mark as processed</button>
         </div>
         
         </form>

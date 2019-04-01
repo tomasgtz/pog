@@ -14,7 +14,8 @@ export class PO {
         public status: string,
         public project: string,
         public creator: string,
-        public subtotal: number
+        public subtotal: number,
+        public payment_terms: string
         
     ) {
 
@@ -30,5 +31,6 @@ export class PO {
         this.project = project;
         this.creator = creator;
         this.subtotal = subtotal;
+        this.payment_terms = payment_terms;
     }
 }

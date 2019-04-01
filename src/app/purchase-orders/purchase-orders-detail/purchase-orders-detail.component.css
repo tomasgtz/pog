@@ -55,3 +55,36 @@ kendo-pdf-document button, kendo-pdf-document #project_id, kendo-pdf-document #c
 .extra-space {
     margin-left: 5px;
 }
+
+.txt-small {
+    font-size: 10px;
+}
+
+.k-pdf-export #pdf-header {
+    display: flex;
+}
+
+.k-pdf-export #pdf-header-2 {
+    display: flex;
+}
+
+.k-pdf-export #pdf-footer {
+    display: flex;
+}
+
+.k-pdf-export #header-screen {
+    display: none;
+}
+
+.hidd {
+    display: none;
+}
+
+.hidd2 {
+    display: none;
+}
+
+.k-pdf-export .mat-input-element {
+    width: 280px;
+    font-size: 10px;
+}

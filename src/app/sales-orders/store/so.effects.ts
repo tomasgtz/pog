@@ -71,6 +71,46 @@ checkOrderStatus = this.actions$
 }));
       
 
+@Effect()
+setOrderAsComplete = this.actions$
+    .ofType(SOActions.SO_AS_COMPLETE)
+    .pipe(switchMap((action: SOActions.SetOrderAsComplete) => {
+      
+      let headers = new HttpHeaders()
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .set('cache-control', 'no-cache');
 
+      const body2 = new HttpParams()
+      .set("folio", this.so.folio_c.toString());
+
+      return this.http.post(
+        'http://192.168.1.122:82/compras/pog/index.php/set_order_as_complete', 
+        body2.toString(), 
+      {headers}); 
+     
+     
+  }), map((response: any) => {       
+
+    console.log(response);
+    
+    if(response.error !== undefined) {
+      return {
+        type: SOActions.SO_ERROR,
+        payload: response.success
+      };
+    } else {
+      return {
+        type: SOActions.SO_SUCCESS,
+        payload: "Order saved as completed"
+      };
+    }
+    
+      
+  }
+), catchError((err,caught) => {
+  
+  this.store.dispatch(new SOActions.ErrorAction(err.error.error + " txt " + err.error.text)); 
+  return caught;
+}));
 
 }

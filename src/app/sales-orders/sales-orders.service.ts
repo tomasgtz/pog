@@ -21,7 +21,7 @@ export class SalesOrdersService {
                 const mapped = Object.entries(response).map(([type, value]) => ({type, value}));
                 
                 mapped.forEach(e => {
-                    console.log(e.value);
+                    //console.log(e.value);
                     let projectId = "";
                     let incluir = true;
 
@@ -45,7 +45,16 @@ export class SalesOrdersService {
                     }
 
                     // not show on HOLD
-                    if(e.value.etapa_c == "on_hold" || e.value.etapa_c == "cancelado") {
+                    /*if(e.value.etapa_c == "on_hold" || e.value.etapa_c == "cancelado") {
+                        incluir = false;
+                    }*/
+
+                    // show procesando ONLY
+                    if(e.value.etapa_c != "procesando") {
+                        incluir = false;
+                    }
+
+                    if(e.value.opportunity_type != "pedido") {
                         incluir = false;
                     }
 
