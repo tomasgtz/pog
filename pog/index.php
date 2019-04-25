@@ -676,6 +676,7 @@ $app->get(
 
 				$stmt = $cn1->prepare($q);
 				$stmt->execute();
+				set_time_limit(30);
 			
 			}
 
